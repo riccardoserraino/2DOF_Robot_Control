@@ -21,3 +21,15 @@ lb = 0.1525;           % Length [m]
 fmax = 50;              % Maximum frequency [Hz]
 Imax = 1;               % Maximum current [A]
 omega_max = 628.3;      % Maximum motor speed [rad/s]
+
+
+%% Estimated data
+k_3165_noload   = 1.601288977178586;
+tau_3165_noload = 0.020622907170894;
+k_3166_noload   = 1.528072828084566;
+tau_3166_noload = 0.021821915834148;
+
+k_3165_load   = 1.436697278373122;
+tau_3165_load = 0.037421535883333;
+k_3166_load   = 1.381159339691515;
+tau_3166_load = 0.038119941238613;
