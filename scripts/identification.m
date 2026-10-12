@@ -25,14 +25,14 @@ c0       = eta*Kg*kt/K_rad;        % = Rm*beta + eta*kt*km*Kg^2
 beta_est = (c0 - eta*kt*km*Kg^2)/Rm; 
 J_est    = tau*c0/Rm; 
  
-%% DATASHEET MODEL (same structure, including efficiencies) 
+%% DATASHEET MODEL
 s    = tf('s'); 
 c0_d = Rm*beta_eq + eta*kt*km*Kg^2; 
 K_d  = eta*Kg*kt/c0_d;             % [rad/(V s)] 
 tau_d = Jeq*Rm/c0_d;               % [s] 
 G_ds = (180/pi) * K_d / (s*(tau_d*s + 1)); 
  
-% Identified model as a transfer function (convenient for controller design) 
+% Identified model as a transfer function
 G_id = (180/pi) * K_rad / (s*(tau*s + 1)); 
  
 %% RESULTS 

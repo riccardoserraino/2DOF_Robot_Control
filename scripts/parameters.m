@@ -15,8 +15,8 @@ Jeq = 2.087e-3;        % Equivalent load inertia [kg*m^2]
 
 beta_eq = 0.015;       % Equivalent viscous friction [N*m*s/rad]
 
-mb = 0.038;            % Additional mass [kg]
-lb = 0.1525;           % Length [m]
+m = 0.065;            % Link mass [kg]
+l = 0.127;            % Link length [m]
 
 fmax = 50;              % Maximum frequency [Hz]
 Imax = 1;               % Maximum current [A]
