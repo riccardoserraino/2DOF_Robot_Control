@@ -1,4 +1,3 @@
-
 %% KINEMATICS SETUP - FORWARD KINEMATICS AND JACOBIAN
 clear; clc; close all;
 run('parameters.m');
@@ -20,6 +19,12 @@ p_sym = [xc; yc];
 J_sym = jacobian(p_sym, [phi_s, theta_s]);
 
 %% 3. Generate standalone numerical functions
+% Jacobian computation for singularities is useful only for when the
+% actuator input give no changes to end-effector position, so it is
+% included for mathematical completion in the code but for singularities
+% findings constraint relation has been used to detect all possible
+% singularities
+
 matlabFunction(p_sym, ...
     'Vars', {phi_s, theta_s, l_s}, ...
     'File', 'FK_classic', ...
@@ -30,7 +35,9 @@ matlabFunction(J_sym, ...
     'File', 'J_classic', ...
     'Optimize', true);
 
-fprintf('FK_classic.m and J_classic.m generated successfully.\n');
+fprintf('FK_classic.m generated successfully.\n');
+fprintf('J_classic.m generated successfully.\n');
+
 
 
 function [q_sol, p_check, position_error, exitflag] = ...
@@ -62,6 +69,11 @@ disp('Jacobian at home:');
 disp(J_home);
 
 %% 5. Test inverse kinematics
+% choose desired position to reach being aware of the geometry of the
+% system and the possible configuration reachable by the robot
+% q0 = [0,0] because we inted operating around home position as it lays in
+% the safe working zone and from it all the needed poses can be reached
+
 p_des = [0.06; 0.06];
 q0 = [0; 0];
 

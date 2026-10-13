@@ -1,9 +1,9 @@
-
-%% SQUARE TRAJECTORY - INVERSE KINEMATICS
+%% SQUARE TRAJECTORY
+% phi_input and theta_input are matrices containing angle reference and
+% timestep for simulink input 
 clear; clc; close all;
 run('parameters.m');
 run('kinematics.m');
-
 
 function [q_sol, p_check, position_error, exitflag] = ...
     inverse_kinematic(p_des, q0, l, display_mode)
@@ -20,7 +20,6 @@ function [q_sol, p_check, position_error, exitflag] = ...
     p_check = FK_classic(q_sol(1), q_sol(2), l);
     position_error = norm(p_check - p_des);
 end
-
 
 %% Trajectory parameters
 side = 0.05;       % Square side [m]
@@ -71,7 +70,7 @@ for k = 1:N
         inverse_kinematic(p_des, q_guess, l, 'off');
 
     if exitflag <= 0 || pos_error > 1e-5
-        error('IK failed at sample %d/%d. Error = %.3e m.', ...
+        error('\nIK failed at sample %d/%d. Error = %.3e m.', ...
               k, N, pos_error);
     end
 
@@ -80,8 +79,26 @@ for k = 1:N
     error_traj(k) = pos_error;
     q_guess = q_sol;
 end
+fprintf('\nMaximum position error: %.3e m\n', max(error_traj));
 
-fprintf('Maximum position error: %.3e m\n', max(error_traj));
+%% Actuator reference signals for Simulink
+
+phi_ref   = q_traj(1,:);    % Actuator A [rad]
+theta_ref = q_traj(2,:);    % Actuator E [rad]
+
+% Time vector associated with each reference sample
+t_ref = t(:);
+
+% Input matrices: [time, reference angle]
+phi_input   = [t_ref, phi_ref(:)];
+theta_input = [t_ref, theta_ref(:)];
+
+% Sampling interval
+dt_ref = t(2) - t(1);
+
+fprintf('Number of samples: %d\n', N);
+fprintf('Reference timestep: %.6f s\n', dt_ref);
+fprintf('Reference frequency: %.2f Hz\n', 1/dt_ref);
 
 %% Plot actuator angles
 figure;
