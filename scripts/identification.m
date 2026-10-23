@@ -12,7 +12,7 @@ plot(est.data(1,:), est.data(3,:)); grid on;
  
 z_est = make_iddata(est.data); 
 z_val = make_iddata(val.data); 
- 
+
 %% ESTIMATION: Kp/(s(1+Tp1*s)) -- integrator imposed by the 'P1I' structure 
 opt  = procestOptions('InitialCondition','zero');   % motor at rest at t=0 
 sysP = procest(z_est, 'P1I', opt);                  % Kp in deg/(V s), Tp1 in s 

@@ -1,10 +1,11 @@
-%% PID TUNE
+%% PID TUNE SIUM
 s = tf('s');
 sys_3165_load = (k_3165_load/(s*(tau_3165_load*s + 1)))*(-360/(2*pi));
 sys_3166_load = (k_3166_load/(s*(tau_3166_load*s + 1)))*(-360/(2*pi));
 
+
 % tuning
-wc = 20;
+wc = 30;
 pm = 90;
 type = 'PID';
 opts = pidtuneOptions('PhaseMargin', pm, 'CrossoverFrequency', wc, 'DesignFocus', 'reference-tracking');

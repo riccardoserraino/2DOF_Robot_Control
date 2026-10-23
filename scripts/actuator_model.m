@@ -8,7 +8,6 @@ eta = nm * ng;                  % Motor + gearbox efficiency
 Jtot = Jm_rotor + Jeq;          % Total equivalent inertia
 conv = 360/(2*pi);              % rad -> deg
 
-
 %% TRANSFER FUNCTIONS
 
 s = tf('s');
