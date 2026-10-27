@@ -1,4 +1,4 @@
-%% KINEMATICS - forward kinematics, Jacobian and inverse kinematics of the five-bar
+%% KINEMATICS - forward kinematics, Jacobian and inverse kinematics of the four-bar linkage
 % Geometry (A = (0,0), E = (2l,0), all links of length l):
 %   B = l*[cos(phi); sin(phi)]                (left motor, angle phi)
 %   D = [2l - l*sin(theta); l*cos(theta)]     (right motor, angle theta)

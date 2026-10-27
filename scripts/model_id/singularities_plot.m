@@ -1,4 +1,4 @@
-%% SINGULARITIES OF THE FIVE-BAR (joint space and Cartesian space)
+%% SINGULARITIES OF THE FOUR-BAR LINKAGE (joint space and Cartesian space)
 % Requires FK_classic.m (run kinematics.m first).
 %
 % Loop-closure constraints |C-B| = l, |C-D| = l, differentiated in time:

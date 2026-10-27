@@ -23,13 +23,13 @@ Imax      = 1;         % Maximum continuous current [A]
 omega_max = 628.3;     % Maximum motor speed [rad/s]
 Vmax      = 6;         % Voltage saturation used in the Simulink models [V]
 
-%% 3. Five-bar linkage
+%% 3. Four-bar linkage
 m = 0.065;             % Link mass [kg]
 l = 0.127;             % Link length, all four links are equal [m]
 
 %% 4. Identified models: G(s) = k / (s*(tau*s + 1)),  k in [rad/(V*s)], tau in [s]
 % Results of model_id/identification.m (periodic multisine, procest 'P1I').
-% "noload" = motor alone, "load" = five-bar linkage attached.
+% "noload" = motor alone, "load" = four-bar linkage attached.
 k_3165_noload   = 1.601288977178586;
 tau_3165_noload = 0.020622907170894;
 k_3166_noload   = 1.528072828084566;

@@ -8,7 +8,7 @@ eta = nm*ng;                 % Motor * gearbox efficiency
 
 %% 1. Select the experiment
 motor    = '3166';           % '3165' or '3166'
-load_tag = '_load';          % '' = motor alone, '_load' = five-bar attached
+load_tag = '_load';          % '' = motor alone, '_load' = four-bar linkage attached
 data_dir = '../../data/';
 
 est = load([data_dir 'data_' motor '_seed30' load_tag '.mat']);   % estimation
