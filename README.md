@@ -1,6 +1,6 @@
-# CNC Machine Control - Coupled MIMO System
+# 2DOF Robot Control - Coupled MIMO System
 
-Control of the **Quanser CNC plotter**: two rotary servos drive a **four-bar linkage**, and the end-effector point **C** has to track a trajectory in the plane.
+Control of the **2 DOF Robot** by *Quanser*, emulating a CNC Machine: two rotary servos drive a **four-bar linkage**, and the end-effector point **C** has to track a trajectory in the plane.
 The two motors are coupled through the linkage, so the system is MIMO. Every controller is first tested on a **Simscape Multibody** model and then run on the real machine with **QUARC**.
 
 <p align="center">
