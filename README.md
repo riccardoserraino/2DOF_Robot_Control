@@ -94,19 +94,19 @@ flowchart LR
 
 Each joint is a DC motor with a gearbox. The electrical and mechanical equations are coupled through the torque and the back-EMF:
 
-$$
+```math
 L_m \dot I + R_m I = V - K_g k_m\,\omega \qquad\qquad J_{eq}\,\dot\omega + \beta_{eq}\,\omega = \eta\, K_g k_t\, I
-$$
+```
 
-The electrical pole $R_m/L_m$ is a few hundred times faster than the mechanical one, so $L_m$ is neglected (the Bode plots of the two models overlap well beyond the control band). The model from voltage to angle becomes:
+The electrical pole $`R_m/L_m`$ is a few hundred times faster than the mechanical one, so $`L_m`$ is neglected (the Bode plots of the two models overlap well beyond the control band). The model from voltage to angle becomes:
 
-$$
+```math
 G(s)=\frac{\theta(s)}{V(s)}=\frac{k}{s(\tau s+1)},\qquad
 k=\frac{\eta K_g k_t}{R_m\beta_{eq}+\eta k_t k_m K_g^2},\qquad
 \tau=\frac{R_m J_{eq}}{R_m\beta_{eq}+\eta k_t k_m K_g^2}
-$$
+```
 
-an integrator plus one mechanical pole: only $k$ and $\tau$ have to be identified.
+an integrator plus one mechanical pole: only $`k`$ and $`\tau`$ have to be identified.
 
 [↑ back to roadmap](#lab-roadmap)
 
@@ -116,7 +116,7 @@ an integrator plus one mechanical pole: only $k$ and $\tau$ have to be identifie
 
 `multisine_design.m` → `identification.m`
 
-The structure of $G(s)$ is known, so $k$ and $\tau$ are estimated with a **grey-box** fit (`procest`, integrator + one pole) on one experiment and validated on another.
+The structure of $`G(s)`$ is known, so $`k`$ and $`\tau`$ are estimated with a **grey-box** fit (`procest`, integrator + one pole) on one experiment and validated on another.
 
 The input is a **periodic multisine**, a sum of sines repeated over several periods. It excites the whole band of interest in one experiment, and since every sine is exactly periodic, the frequency response is read directly from the FFT and averaged over the periods. Harmonics, amplitudes and random phases are chosen to avoid nonlinear distortion, compensate the motor roll-off and keep the peak voltage low.
 
@@ -130,18 +130,18 @@ The test was first run on the **motors alone**, to check voltages and angle excu
 
 `kinematics.m`
 
-The linkage has two degrees of freedom, one per motor. With **A** at the origin and **E** at $(2l, 0)$, the motors set the positions of the two elbows **B** and **D**:
+The linkage has two degrees of freedom, one per motor. With **A** at the origin and **E** at $`(2l, 0)`$, the motors set the positions of the two elbows **B** and **D**:
 
-$$
-B = l\begin{bmatrix}\cos\varphi\\ \sin\varphi\end{bmatrix},\qquad
-D = \begin{bmatrix}2l - l\sin\theta\\ l\cos\theta\end{bmatrix}
-$$
+```math
+B = l\left[\genfrac{}{}{0pt}{}{\cos\varphi}{\sin\varphi}\right],\qquad
+D = \left[\genfrac{}{}{0pt}{}{2l - l\sin\theta}{l\cos\theta}\right]
+```
 
-The pen **C** is at distance $l$ from both, so it lies at the intersection of two circles: the midpoint of $BD$ moved by $h = l\sqrt{1-|BD|^2/(4l^2)}$ along the perpendicular to $BD$. This gives a closed-form **forward kinematics** $p_C = f(\varphi,\theta)$, derived by hand and checked symbolically.
+The pen **C** is at distance $`l`$ from both, so it lies at the intersection of two circles: the midpoint of $`BD`$ moved by $`h = l\sqrt{1-|BD|^2/(4l^2)}`$ along the perpendicular to $`BD`$. This gives a closed-form **forward kinematics** $`p_C = f(\varphi,\theta)`$, derived by hand and checked symbolically.
 
-- **Jacobian** $J = \partial p_C/\partial q$: computed symbolically and exported as a function.
-- **Home pose** ($\varphi=\theta=0$): the linkage is a square, and near it the axes are almost decoupled ($\varphi$ moves $y$, $\theta$ moves $x$).
-- **Inverse kinematics**: solved numerically (Newton iterations starting from the previous sample, so the solution stays on the same assembly mode). Velocities and accelerations for the feedforward come from $\dot q = J^{-1}\dot p$ and $\ddot q = J^{-1}(\ddot p - \dot J\dot q)$.
+- **Jacobian** $`J = \partial p_C/\partial q`$: computed symbolically and exported as a function.
+- **Home pose** ($`\varphi=\theta=0`$): the linkage is a square, and near it the axes are almost decoupled ($`\varphi`$ moves $`y`$, $`\theta`$ moves $`x`$).
+- **Inverse kinematics**: solved numerically (Newton iterations starting from the previous sample, so the solution stays on the same assembly mode). Velocities and accelerations for the feedforward come from $`\dot q = J^{-1}\dot p`$ and $`\ddot q = J^{-1}(\ddot p - \dot J\dot q)`$.
 
 [↑ back to roadmap](#lab-roadmap)
 
@@ -151,21 +151,21 @@ The pen **C** is at distance $l$ from both, so it lies at the intersection of tw
 
 `singularities_plot.m` (run `kinematics.m` first)
 
-Differentiating the loop constraints $|C-B| = |C-D| = l$ gives:
+Differentiating the loop constraints $`|C-B| = |C-D| = l`$ gives:
 
-$$
+```math
 J_x\,\dot p_C = J_q\,\dot q,\qquad
-J_x=\begin{bmatrix}(C-B)^T\\(C-D)^T\end{bmatrix},\qquad
-J_q=\begin{bmatrix}(C-B)^T\frac{\partial B}{\partial\varphi} & 0\\ 0 & (C-D)^T\frac{\partial D}{\partial\theta}\end{bmatrix}
-$$
+J_x=\left[\genfrac{}{}{0pt}{}{(C-B)^T}{(C-D)^T}\right],\qquad
+J_q=\mathrm{diag}\left((C-B)^T\frac{\partial B}{\partial\varphi},\;(C-D)^T\frac{\partial D}{\partial\theta}\right)
+```
 
 | Type | Condition | Physical meaning |
 |------|-----------|------------------|
-| **Serial** | $\det J_q = 0$ | one arm fully stretched or folded: the pen cannot move in some direction |
-| **Parallel** | $\det J_x = 0$, $B \neq D$ | B, C, D aligned: the pen can move with the motors locked (uncontrollable) |
-| **Degenerate** | $B = D$ | the position of C is undetermined |
+| **Serial** | $`\det J_q = 0`$ | one arm fully stretched or folded: the pen cannot move in some direction |
+| **Parallel** | $`\det J_x = 0`$, $`B \neq D`$ | B, C, D aligned: the pen can move with the motors locked (uncontrollable) |
+| **Degenerate** | $`B = D`$ | the position of C is undetermined |
 
-The FK Jacobian $J = J_x^{-1}J_q$ alone is not enough: its determinant vanishes at serial singularities and blows up at parallel ones. Both conditions are therefore evaluated on a grid of angles and drawn in **joint space** (angles to avoid) and **Cartesian space** (positions to avoid). Home is the best-conditioned pose, so trajectories are centred on it and kept inside the region bounded by the singularity curves.
+The FK Jacobian $`J = J_x^{-1}J_q`$ alone is not enough: its determinant vanishes at serial singularities and blows up at parallel ones. Both conditions are therefore evaluated on a grid of angles and drawn in **joint space** (angles to avoid) and **Cartesian space** (positions to avoid). Home is the best-conditioned pose, so trajectories are centred on it and kept inside the region bounded by the singularity curves.
 
 [↑ back to roadmap](#lab-roadmap)
 
@@ -184,9 +184,9 @@ The plant already has an integrator, so with the integral action the loop also f
 
 **Step 2: feedforward.** To improve tracking, a feedforward term was added. The trajectory is known in advance and smooth, so inverting the motor model gives the voltage needed to follow it:
 
-$$
+```math
 \tau\ddot\theta + \dot\theta = k\,u \;\;\Rightarrow\;\; u = \underbrace{\frac{\tau}{k}\ddot q_d + \frac{1}{k}\dot q_d}_{u_{ff}} + u_{PID}
-$$
+```
 
 The feedforward supplies most of the input, and the PID only corrects model errors and disturbances. This removes most of the lag, and since the feedforward is outside the loop it does not change stability.
 
