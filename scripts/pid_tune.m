@@ -5,7 +5,7 @@ sys_3166_load = (k_3166_load/(s*(tau_3166_load*s + 1)))*(-360/(2*pi));
 
 
 % tuning
-wc = 30;
+wc = 20;
 pm = 90;
 type = 'PID';
 opts = pidtuneOptions('PhaseMargin', pm, 'CrossoverFrequency', wc, 'DesignFocus', 'reference-tracking');
