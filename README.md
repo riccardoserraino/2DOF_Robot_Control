@@ -3,6 +3,11 @@
 Control of the **Quanser CNC plotter**: two rotary servos drive a **four-bar linkage**, and the end-effector point **C** has to track a trajectory in the plane.
 The two motors are coupled through the linkage, so the system is MIMO. Every controller is first tested on a **Simscape Multibody** model and then run on the real machine with **QUARC**.
 
+<p align="center">
+  <img src="docs/img/structure.png" alt="Quanser CNC plotter in home configuration with joints A-E" width="750"/>
+  <br/><sub>Home configuration with the joints A–E (image: Quanser CNC documentation).</sub>
+</p>
+
 ---
 
 ## Lab roadmap
@@ -14,7 +19,7 @@ Follow the steps in order, or jump to the one you need.
 | 1 | **Motor model** | Choose the model structure of each joint | First-principles modelling | [→](#1-motor-model) |
 | 2 | **Identification** | Estimate the model parameters on the real motors | Periodic multisine, grey-box estimation | [→](#2-model-identification) |
 | 3 | **Kinematics** | Link joint angles and pen position | Closed-form FK, Jacobian, numerical IK | [→](#3-kinematics) |
-| 4 | **Singularities** | Find the safe range of angles | Constraint Jacobians | [→](#4-singularities) |
+| 4 | **Singularities** | Find the safe range of angles | Constraint Jacobians | [→](#4-singularities-and-safe-workspace) |
 | 5 | **PID + feedforward** | Track the trajectory in joint space | Loop shaping, inverse-model feedforward | [→](#5-pid-control-and-feedforward) |
 | 6 | **Pole placement + observer** | State feedback with estimated speed | *Work in progress* | [→](#6-pole-placement-and-observer) |
 | 7 | **Simulink models** | Test in simulation, then on the machine | Simscape Multibody, QUARC | [→](#7-simulink-models) |
@@ -54,33 +59,32 @@ matlab/
 │   │   ├── kinematics.m               # step 3 (generates FK_classic.m, J_classic.m)
 │   │   └── singularities_plot.m       # step 4
 │   ├── control/
-│   │   ├── pid.m                      # step 5 + workspace loader
-│   │   └── pole_placement.m           # step 6 (WIP)
+│   │   ├── pid.m                      # step 5, creates the Simulink variables
+│   │   └── pole_placement.m           # step 6 (WIP), creates the Simulink variables
 │   └── plot/
 │       └── plotter.m                  # desired vs real/simulated trajectory
-└── slx/
-    ├── CNC_pid_ff.slx    ├── Model_pid_ff.slx
-    └── CNC_pp_obs.slx    └── Model_pp_obs.slx
+├── slx/
+│   ├── CNC_pid_ff.slx             # real machine
+│   ├── CNC_pp_obs.slx
+│   ├── Model_pid_ff.slx           # multibody simulation
+│   └── Model_pp_obs.slx
+└── docs/img/                      # README images
 ```
 
 ## Quick start
 
+The workflow is always **simulation first, real machine after**:
+
+```mermaid
+flowchart LR
+    W[pid.m / pole_placement.m<br/>load workspace] --> S[Model_*.slx<br/>simulation] --> R[CNC_*.slx<br/>real machine] --> P[plotter.m]
+```
+
+- **`pid.m`** and **`pole_placement.m`** are the only scripts needed to simulate: they load `parameters.m` and create every variable used by the Simulink models (`pid.m` → `*_pid_ff.slx`, `pole_placement.m` → `*_pp_obs.slx`).
+- All the other scripts (`model_id/`, `plot/`) are for theoretical checks, model identification and plotting.
+
 > [!IMPORTANT]
-> Paths are relative: **run every script from its own folder** (accept *Change Folder* when MATLAB asks).
-
-1. Run `kinematics.m` once: it generates `FK_classic.m` and `J_classic.m` (not committed).
-2. Run `multisine_design.m` once: it creates `data/multisine_design.mat`, needed by `identification.m` and by `CNC_pid_ff.slx`.
-3. Load the workspace, then open the model:
-
-| Model | Run before |
-|-------|-----------|
-| `*_pid_ff.slx` | `scripts/control/pid.m` |
-| `*_pp_obs.slx` | `scripts/control/pole_placement.m` (calls `pid.m` itself) |
-
-4. After a run, `plotter.m` compares desired and obtained trajectory.
-
-> [!NOTE]
-> The analysis scripts in `model_id/` start with `clear`: run them on their own, then re-run `pid.m` before simulating.
+> Run every script from its own folder (paths are relative). `CNC_pid_ff.slx` loads `data/multisine_design.mat` at start-up: run `multisine_design.m` once if the file is missing.
 
 ---
 
@@ -88,14 +92,21 @@ matlab/
 
 `actuator_model.m`
 
-Each joint is a DC motor with a gearbox. Writing the electrical and mechanical equations (with the back-EMF closing a loop between them) gives a third-order model from voltage to angle.
-The electrical pole is a few hundred times faster than the mechanical one, so the inductance can be neglected. The Bode plots of the full and simplified models overlap well beyond the control band, which leaves:
+Each joint is a DC motor with a gearbox. The electrical and mechanical equations are coupled through the torque and the back-EMF:
 
 $$
-G(s)=\frac{\theta(s)}{V(s)}=\frac{k}{s(\tau s+1)}
+L_m \dot I + R_m I = V - K_g k_m\,\omega \qquad\qquad J_{eq}\,\dot\omega + \beta_{eq}\,\omega = \eta\, K_g k_t\, I
 $$
 
-an integrator (voltage → speed → angle) plus one mechanical pole. Only $k$ and $\tau$ need to be identified.
+The electrical pole $R_m/L_m$ is a few hundred times faster than the mechanical one, so $L_m$ is neglected (the Bode plots of the two models overlap well beyond the control band). The model from voltage to angle becomes:
+
+$$
+G(s)=\frac{\theta(s)}{V(s)}=\frac{k}{s(\tau s+1)},\qquad
+k=\frac{\eta K_g k_t}{R_m\beta_{eq}+\eta k_t k_m K_g^2},\qquad
+\tau=\frac{R_m J_{eq}}{R_m\beta_{eq}+\eta k_t k_m K_g^2}
+$$
+
+an integrator plus one mechanical pole: only $k$ and $\tau$ have to be identified.
 
 [↑ back to roadmap](#lab-roadmap)
 
@@ -105,21 +116,11 @@ an integrator (voltage → speed → angle) plus one mechanical pole. Only $k$ a
 
 `multisine_design.m` → `identification.m`
 
-Since the structure of $G(s)$ is known, a **grey-box** estimate is enough (`procest` with an integrator + one pole). One experiment is used for estimation, a different one for validation.
+The structure of $G(s)$ is known, so $k$ and $\tau$ are estimated with a **grey-box** fit (`procest`, integrator + one pole) on one experiment and validated on another.
 
-**Why a periodic multisine.** The input is a sum of sines, repeated over several periods:
-- it excites many frequencies at once, around the mechanical pole and the future control band;
-- each sine is exactly periodic in the record, so its frequency falls on an FFT bin: the frequency response is measured directly, with no leakage, and averaging the periods reduces noise;
-- the chosen harmonics avoid each other's multiples, so distortion from nonlinearities (friction, backlash) does not corrupt the measured points;
-- amplitudes grow with frequency to compensate the roll-off of the motor;
-- random phases keep the peak voltage low. Two seeds give two experiments with the same frequencies but different signals, one to estimate and one to validate.
+The input is a **periodic multisine**, a sum of sines repeated over several periods. It excites the whole band of interest in one experiment, and since every sine is exactly periodic, the frequency response is read directly from the FFT and averaged over the periods. Harmonics, amplitudes and random phases are chosen to avoid nonlinear distortion, compensate the motor roll-off and keep the peak voltage low.
 
-The signal has zero mean over a period, so the angle oscillates around its start without drifting away.
-
-**No load first, then load.** The excitation was first applied to the motors alone, to check voltage levels and angle excursion safely. Since the motion stayed small, **the same signal** was then applied with the linkage attached, without reaching a singularity or damaging the mechanism.
-
-**Validation** is done in time (simulated vs measured angle on the validation experiment) and in frequency (measured FFT points vs Bode of the identified and datasheet models).
-With the linkage attached, the time constant grows (more inertia) and the gain drops slightly (more friction). **The control design uses the models identified with the load.**
+The test was first run on the **motors alone**, to check voltages and angle excursion safely, then repeated with the **same signal** and the **linkage attached**. The models identified with the load are the ones used for control.
 
 [↑ back to roadmap](#lab-roadmap)
 
@@ -129,31 +130,42 @@ With the linkage attached, the time constant grows (more inertia) and the gain d
 
 `kinematics.m`
 
-The linkage has two degrees of freedom, one per motor. The motors set the positions of the two elbows **B** and **D**. The pen **C** is at distance $l$ from both, so it is the intersection of two circles: the midpoint of $BD$ moved along the perpendicular to $BD$. This gives a closed-form **forward kinematics** $p_C = f(\varphi,\theta)$, derived by hand and checked symbolically.
+The linkage has two degrees of freedom, one per motor. With **A** at the origin and **E** at $(2l, 0)$, the motors set the positions of the two elbows **B** and **D**:
+
+$$
+B = l\begin{bmatrix}\cos\varphi\\ \sin\varphi\end{bmatrix},\qquad
+D = \begin{bmatrix}2l - l\sin\theta\\ l\cos\theta\end{bmatrix}
+$$
+
+The pen **C** is at distance $l$ from both, so it lies at the intersection of two circles: the midpoint of $BD$ moved by $h = l\sqrt{1-|BD|^2/(4l^2)}$ along the perpendicular to $BD$. This gives a closed-form **forward kinematics** $p_C = f(\varphi,\theta)$, derived by hand and checked symbolically.
 
 - **Jacobian** $J = \partial p_C/\partial q$: computed symbolically and exported as a function.
 - **Home pose** ($\varphi=\theta=0$): the linkage is a square, and near it the axes are almost decoupled ($\varphi$ moves $y$, $\theta$ moves $x$).
-- **Inverse kinematics**: no simple closed form, so it is solved numerically. Inside Simulink, Newton iterations start from the previous sample, so the solution always stays on the same assembly mode.
-- Joint velocity and acceleration for the feedforward come from $\dot q = J^{-1}\dot p$ and $\ddot q = J^{-1}(\ddot p - \dot J\dot q)$.
+- **Inverse kinematics**: solved numerically (Newton iterations starting from the previous sample, so the solution stays on the same assembly mode). Velocities and accelerations for the feedforward come from $\dot q = J^{-1}\dot p$ and $\ddot q = J^{-1}(\ddot p - \dot J\dot q)$.
 
 [↑ back to roadmap](#lab-roadmap)
 
 ---
 
-## 4. Singularities
+## 4. Singularities and safe workspace
 
-`singularities_plot.m` (needs `FK_classic.m`)
+`singularities_plot.m` (run `kinematics.m` first)
 
-Differentiating the loop constraints ($|C-B| = |C-D| = l$) gives $J_x\,\dot p_C = J_q\,\dot q$. Each matrix shows one family of singularities:
+Differentiating the loop constraints $|C-B| = |C-D| = l$ gives:
+
+$$
+J_x\,\dot p_C = J_q\,\dot q,\qquad
+J_x=\begin{bmatrix}(C-B)^T\\(C-D)^T\end{bmatrix},\qquad
+J_q=\begin{bmatrix}(C-B)^T\frac{\partial B}{\partial\varphi} & 0\\ 0 & (C-D)^T\frac{\partial D}{\partial\theta}\end{bmatrix}
+$$
 
 | Type | Condition | Physical meaning |
 |------|-----------|------------------|
 | **Serial** | $\det J_q = 0$ | one arm fully stretched or folded: the pen cannot move in some direction |
-| **Parallel** | $\det J_x = 0$ | B, C, D aligned: the pen can move with the motors locked, so it is uncontrollable |
+| **Parallel** | $\det J_x = 0$, $B \neq D$ | B, C, D aligned: the pen can move with the motors locked (uncontrollable) |
 | **Degenerate** | $B = D$ | the position of C is undetermined |
 
-The FK Jacobian alone is not enough: it only vanishes at serial singularities and blows up at parallel ones. So both conditions are evaluated on a grid of angles and drawn as curves in **joint space** (which angles to avoid) and in **Cartesian space** (which pen positions to avoid).
-Home is the best-conditioned pose, so trajectories are centred on it: the square used in the models stays well inside the safe region.
+The FK Jacobian $J = J_x^{-1}J_q$ alone is not enough: its determinant vanishes at serial singularities and blows up at parallel ones. Both conditions are therefore evaluated on a grid of angles and drawn in **joint space** (angles to avoid) and **Cartesian space** (positions to avoid). Home is the best-conditioned pose, so trajectories are centred on it and kept inside the region bounded by the singularity curves.
 
 [↑ back to roadmap](#lab-roadmap)
 
@@ -161,23 +173,22 @@ Home is the best-conditioned pose, so trajectories are centred on it: the square
 
 ## 5. PID control and feedforward
 
-`pid.m` loads `parameters.m`, designs one PID per motor on the identified load model, and leaves in the workspace everything the `*_pid_ff.slx` models need.
+`pid.m`
 
-**Why these `pidtune` specifications**
-- **Crossover below the mechanical pole and inside the identified band**: the controller only acts where the model is reliable, and the voltage stays away from saturation.
-- **90° phase margin**: no overshoot. An overshoot on one joint would show up as a path error at the corners.
-- **Reference-tracking focus**: the goal is following a reference; disturbances are small.
-- **Same specifications on both motors**: both joints get the same closed-loop dynamics, so the coupled linkage does not distort the shape in the plane.
+**Step 1: PID.** One PID per motor is tuned with `pidtune` on the identified load model:
+- **crossover below the mechanical pole**, inside the identified band: the controller acts only where the model is reliable, and the voltage stays far from saturation;
+- **90° phase margin**: no overshoot, which would show up as a path error at the corners;
+- **reference-tracking focus**, and **the same specifications on both motors**: both joints get the same closed-loop dynamics, so the coupled linkage does not distort the shape.
 
-The plant already contains an integrator, so with the integral action the loop also follows ramps with zero steady-state error.
+The plant already has an integrator, so with the integral action the loop also follows ramps with zero steady-state error. Faster references, however, are still tracked with a lag.
 
-**Feedforward.** The trajectory is known in advance and smooth, so inverting the motor model gives the voltage needed to follow it:
+**Step 2: feedforward.** To improve tracking, a feedforward term was added. The trajectory is known in advance and smooth, so inverting the motor model gives the voltage needed to follow it:
 
 $$
-u_{ff} = \frac{\tau}{k}\,\ddot q_d + \frac{1}{k}\,\dot q_d
+\tau\ddot\theta + \dot\theta = k\,u \;\;\Rightarrow\;\; u = \underbrace{\frac{\tau}{k}\ddot q_d + \frac{1}{k}\dot q_d}_{u_{ff}} + u_{PID}
 $$
 
-The feedforward supplies most of the input, and the PID only corrects model errors. This removes the delay of feedback-only control. Since the feedforward is outside the loop, it does not change stability.
+The feedforward supplies most of the input, and the PID only corrects model errors and disturbances. This removes most of the lag, and since the feedforward is outside the loop it does not change stability.
 
 [↑ back to roadmap](#lab-roadmap)
 
