@@ -5,7 +5,7 @@ The two motors are coupled through the linkage, so the system is MIMO. Every con
 
 <p align="center">
   <img src="docs/img/structure.png" alt="Quanser CNC plotter in home configuration with joints A-E" width="750"/>
-  <br/><sub>Home configuration with the joints A–E (image: Quanser CNC documentation).</sub>
+  <br/><sub>Home configuration (image: Quanser CNC documentation).</sub>
 </p>
 
 ---
