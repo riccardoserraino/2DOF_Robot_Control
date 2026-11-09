@@ -20,8 +20,8 @@ sys_3166_load = k_3166_load/(s*(tau_3166_load*s + 1)) * (-180/pi);
 % pm = 90 deg   : no overshoot, so neither axis overshoots the path corners.
 % Same specs on both motors -> same closed-loop dynamics on both axes, so
 % the coupled four-bar linkage does not distort the shape in the xy-plane.
-wc       = 30;              % Crossover frequency [rad/s]
-pm       = 60;              % Phase margin [deg]
+wc       = 80;              % Crossover frequency [rad/s]
+pm       = 50;              % Phase margin [deg]
 pid_type = 'PID';           % (not 'type': that would shadow a built-in)
 opts = pidtuneOptions('PhaseMargin', pm, 'CrossoverFrequency', wc, ...
                       'DesignFocus', 'reference-tracking');

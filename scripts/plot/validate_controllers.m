@@ -22,8 +22,11 @@
 runs = {
 %  file: name only (searched in data/sim and data/lab), 'sim/...', 'lab/...' or full path
 %  file                                       type    label
-  [tagA  '.mat'],           'PID',   'realistic plant'
-  [tagB  '.mat'],           'PID',   'ideal plant'
+  [config1 '.mat'],           'PID',   'wc=30 pm=60'
+  [config2 '.mat'],           'PID',   'wc=40 pm=50'
+  [config3 '.mat'],           'PID',   'wc=50 pm=50'
+  [config4 '.mat'],           'PID',   'wc=60 pm=50'
+  [config5 '.mat'],           'PID',   'wc=60 pm=50'
 };
 
 %% ===== Options =====
