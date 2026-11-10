@@ -12,6 +12,11 @@
 %            slowest real pole, the choice for steps).
 % Smooth dragging: while dragging a FAST model is used (Pade delay, one simulation for
 % all beta, timer refresh, frames dropped if busy); on release everything is EXACT.
+% Moving the poles (STATS prints wn, zeta, alpha of the pair):
+%   further LEFT  (larger wn)    -> faster and stiffer joint, more voltage and encoder noise
+%   closer to the REAL AXIS (zeta -> 1) -> less oscillation/overshoot, slightly slower
+%   real pole further left (larger alpha) -> faster integral action: friction and load
+%                                errors removed sooner, but more overshoot with beta = 1
 clear; clc; close all
 addpath(fullfile(fileparts(mfilename('fullpath')), 'utils'));
 motor   = 2;               % 1 = motor 3165, 2 = motor 3166
@@ -179,6 +184,7 @@ Cy   = ss(Ac, By, Cc, 0);                              % controller y -> u
 E.L  = -Cy*P;                                          % loop at the motor input
 [gm, E.PM, ~, E.wc] = margin(E.L);   E.GM = 20*log10(gm);
 E.noise = max(abs(squeeze(freqresp(Cy, S.wn))))*S.req.q;
+E.Ms = max(abs(1./(1 + squeeze(freqresp(E.L, S.w)))));  % peak of |S| (Pade delay)
 E = step_metrics(E, S.req);
 end
 
@@ -191,7 +197,7 @@ for k = 1:2
     if k == 2, rs = r; end
 end
 E.t = S.req.t;   E.yd = rs.y_d;   E.L = rs.L;
-E.PM = rs.PM;   E.GM = rs.GM;   E.wc = rs.wc;   E.noise = rs.noise;
+E.PM = rs.PM;   E.GM = rs.GM;   E.wc = rs.wc;   E.noise = rs.noise;   E.Ms = rs.Ms;
 E = step_metrics(E, S.req);
 end
 
@@ -267,7 +273,7 @@ st.info.String = { ...
     ['evaluation: ' h.mode.String]};
 
 % STATS window: requirement table, beta* and beta = 1
-mk = @(k) struct('OS', E.OS(k), 'ts', E.ts(k), 'u_peak', E.up(k), 'PM', E.PM, 'noise', E.noise);
+mk = @(k) struct('OS', E.OS(k), 'ts', E.ts(k), 'u_peak', E.up(k), 'PM', E.PM, 'noise', E.noise, 'Ms', E.Ms);
 [vs, xs] = pp_check(mk(2), S.p, req);
 [v1, x1] = pp_check(mk(1), S.p, req);
 vs = vs(st.rows);   xs = xs(st.rows);                      % keep only the rows shown
@@ -388,13 +394,13 @@ st.sumB = uicontrol(fig2, 'Style', 'text', nrm{:}, 'Position', [0.51 0.375 0.46 
           'HorizontalAlignment', 'left', 'FontWeight', 'bold');
 % Requirement rows of pp_check, and the PID values (computed once, the PID does not move)
 [vp, xp, lim, names] = pp_check(S.pid, S.p_pid, S.req);
-% rows shown: 1 overshoot, 2 settling, 3 peak voltage, 4 phase margin, 6 slowest pole.
-% Row 5 (chatter) is left out of this table: write [1 2 3 4 5 6] to show it again.
-st.rows  = [1 2 3 4 6];
+% rows shown: 1 overshoot, 2 settling, 3 peak voltage, 4 phase margin, 6 slowest pole, 7 Ms.
+% Row 5 (chatter) is left out of this table: write [1 2 3 4 5 6 7] to show it again.
+st.rows  = [1 2 3 4 6 7];
 st.names = names(st.rows);
 st.pid_x = xp(st.rows);                                    % PID values
 st.pid_v = vp(st.rows);                                    % PID violations (<= 0: met)
-mn = [false false false true false true];                  % phase margin and slowest pole: minimum
+mn = [false false false true false true false];            % phase margin and slowest pole: minimum
 st.lims = cell(1, numel(st.rows));
 for k = 1:numel(st.rows)
     j = st.rows(k);

@@ -8,7 +8,7 @@ function pp_report(mot, req, p, beta, name)
 %
 % For every motor given it prints one table and draws one figure with three cases:
 %   PID,  beta = beta*,  beta = 1   (beta changes only the step, not the poles,
-%   theory pdf section 4). '*' in the table marks a requirement not met.
+%   theory pdf section 5). '*' in the table marks a requirement not met.
 
 labels = {'PID', 'beta*', 'beta=1'};
 
@@ -25,17 +25,20 @@ for i = 1:length(mot)
     P = {m.p_pid, p, p};             % poles of each case
 
     % check every case
-    V = zeros(6, 3);
-    X = zeros(6, 3);
+    V = zeros(7, 3);
+    X = zeros(7, 3);
     for k = 1:3
         [V(:, k), X(:, k), lim, names] = pp_check(R{k}, P{k}, req);
     end
 
     % print the table
     fprintf('\n%s - motor %s\n', name, m.name);
+    fprintf('PID = pid_tune.m (fixed, for comparison): Kp = %.4f  Ki = %.4f  Kd = %.5f  N = %g\n', ...
+            m.Cpid.Kp, m.Cpid.Ki, m.Cpid.Kd, req.N_pid);
+    fprintf('test step R = %g deg: overshoot and settling are relative to R, peak voltage scales with R\n', req.R);
     fprintf('poles = %s,  beta* = %.3f,  beta used = %.3f\n', mat2str(p.', 4), g.beta_star, b);
     fprintf('%-22s %9s %9s %9s %9s\n', 'requirement', labels{1}, labels{2}, labels{3}, 'limit');
-    for j = 1:6
+    for j = 1:7
         fprintf('%-22s', names{j});
         for k = 1:3
             if V(j, k) <= 0
@@ -51,6 +54,8 @@ for i = 1:length(mot)
     plot_steps(m, req, R, labels, p, name, b);
 end
 fprintf('\n* = not met. Phase margin and slowest pole are minimum values, the others maximum.\n');
+fprintf(['The PID gains never change. Its column changes only if req changes (R, Td, N_pid) or a\n' ...
+         'design script switches a requirement off (e.g. overshoot with beta = 1).\n']);
 end
 
 %% ---------------- local functions ----------------

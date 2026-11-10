@@ -39,3 +39,21 @@ k_3165_load     = 1.436697278373122;
 tau_3165_load   = 0.037421535883333;
 k_3166_load     = 1.381159339691515;
 tau_3166_load   = 0.038119941238613;
+
+%% 5. Modeling of the disturbances: plant used in simulation
+% Controller and feedforward use *_load (the model we know).
+% The simulated motor uses *_plant, so model and "real" plant differ as on the bench.
+% Realistic values: fit of the multisine data with delay + Coulomb friction.
+%   Td    = pure delay at the motor input [s] (ZOH of the 2 ms controller excluded)
+%   Vc    = Coulomb friction as equivalent input voltage [V]
+%   w_eps = width of the smooth transition around zero speed [rad/s] (tanh)
+use_real_plant = false;     % true -> realistic plant, false -> plant equal to the model
+w_eps = 0.02;              % [rad/s] about 1 deg/s; raise to 0.05 if the simulation is slow
+
+if use_real_plant
+    k_3165_plant = 1.77;   tau_3165_plant = 0.0428;   Td_3165 = 0.0035;   Vc_3165 = 0.12;
+    k_3166_plant = 1.74;   tau_3166_plant = 0.0444;   Td_3166 = 0.0035;   Vc_3166 = 0.14;
+else
+    k_3165_plant = k_3165_load;   tau_3165_plant = tau_3165_load;   Td_3165 = 0;   Vc_3165 = 0;
+    k_3166_plant = k_3166_load;   tau_3166_plant = tau_3166_load;   Td_3166 = 0;   Vc_3166 = 0;
+end

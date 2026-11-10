@@ -13,13 +13,13 @@ function r = closed_loop(m, req, ctrl, beta)
 % OUTPUT r
 %   r.y_r, r.u_r   angle and voltage for a step of req.R degrees in the reference
 %   r.y_d          angle for a step of req.d volts in the load (only plotted by explore_poles)
-%   r.OS, r.ts, r.u_peak, r.IAE, r.PM, r.GM, r.wc, r.L, r.noise   the numbers
+%   r.OS, r.ts, r.u_peak, r.IAE, r.PM, r.GM, r.wc, r.L, r.noise, r.Ms   the numbers
 
 %% 1. Controller block (inputs: reference r and measured angle y, output: voltage u)
 if nargin == 4
     K = pp_controller(m, ctrl, beta);
 else
-    K = pid_controller(ctrl);
+    K = pid_controller(ctrl, req.N_pid);
 end
 
 %% 2. Motor with the delay
@@ -59,6 +59,10 @@ r.L = -Cy*m.G;
 r.L.InputDelay = req.Td;
 [gm, r.PM, ~, r.wc] = margin(r.L);   % gain margin, phase margin [deg], crossover [rad/s]
 r.GM = 20*log10(gm);                 % [dB]
+% Ms = peak of |S| = |1/(1 + L)| (with the delay): 1/Ms is the smallest distance of the
+% Nyquist curve from -1. Ms <= 1.6 guarantees GM >= 8.5 dB and PM >= 36 deg at the same time.
+wM   = logspace(-1, log10(pi/req.Ts), 400);                % 0.1 rad/s .. Nyquist frequency
+r.Ms = max(abs(1./(1 + squeeze(freqresp(r.L, wM)))));      % [-]
 
 %% 7. Chatter: one encoder count times the largest controller gain above 100 rad/s
 w  = logspace(2, log10(pi/req.Ts), 50);                     % 100 rad/s .. Nyquist frequency
@@ -84,13 +88,14 @@ Dc = [N, 0];
 K  = ss(Ac, Bc, Cc, Dc);
 end
 
-function K = pid_controller(Cpid)
-% PID of the Simulink block (Model_pid_ff.slx: parallel form, derivative on the error,
-% filter N = 200, no output limit):  u = C(s)*r - C(s)*y
+function K = pid_controller(Cpid, N)
+% PID of the Simulink block (parallel form, derivative on the error, filter N, no output
+% limit):  u = C(s)*r - C(s)*y.  The gains are the ones of pid_tune.m, never changed here.
+% N = req.N_pid (pp_setup.m), the value of the PID block in CNC_pid_ff.slx.
 % Note: the derivative acts on the error, so a reference step gives a short voltage spike
-% u(0+) = R*(Kp + Kd*N) lasting about 1/N = 5 ms. In the real loop it is cut at 6 V.
+% u(0+) = R*(Kp + Kd*N) lasting about 1/N. In the real loop it is cut at 6 V.
 C = Cpid;
-C.Tf = 1/200;                                     % derivative filter, N = 200 as in Simulink
+C.Tf = 1/N;                                       % derivative filter
 C = ss(C);
 K = [C, -C];
 end

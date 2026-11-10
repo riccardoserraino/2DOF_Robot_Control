@@ -1,0 +1,8 @@
+- Model_pp_obs_20261109_B_square_nofric: design B, no friction model, R=10, slowest pole 0.3rad/s, old traj, no d
+- Model_pp_obs_20261109_A_square_nofric: design A, no friction model, R=10, slowest pole 0.3rad/s, old traj, no d (same params used for CNC_pp_obs_20261109_A_square)
+
+- Model_pp_obs_20261110_A1: beta one, R=3, OS and ts neglected, friction model, slowest pole 5rad/s, traj stop 1.5s when it arrives on the path, no d
+- Model_pp_obs_20261110_A2: beta star, R=21, OS and ts not neglected, friction model, slowest pole 5rad/s, traj stop 1.5s when it arrives on the path, no d
+- Model_pp_obs_20261110_A3: beta star, R=3, OS and ts not neglected, friction model, slowest pole 5rad/s, traj stop 1.5s when it arrives on the path, no d
+
+- Model_pid_ff_20261110: pid and ff, no d, friction model

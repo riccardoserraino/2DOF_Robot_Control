@@ -17,14 +17,14 @@
 % From the MODEL (gains + k, tau): Ms, margins, Nyquist, Bode, |S|, |T|, root locus.
 % From the DATA: joint/tip errors, command and saturation, disturbance and step KPIs.
 % The feedforward is outside the loop: it does not change any robustness result.
-clear; clc; close all
+%clear; clc; close all
 
 %% ===== Runs to compare (edit here) =====
 runs = {
 %  file: name only (searched in data/sim and data/lab), 'sim/...', 'lab/...' or full path
 %  file                                       type    label
-  'Model_pid_ff_20261029_120653.mat',         'PID',   '20wc'
-  'Model_pid_ff_20261029_120803.mat',           'PID',   '30wc'
+  'Model_pid_ff_20261110.mat',         'PID',   'PID'
+  'Model_pp_obs_20261110_A1.mat',           'PP',   'PP, beta=1'
 };
 
 %% ===== Options =====
@@ -33,7 +33,8 @@ opt.enc_res   = 360/4096;       % [deg] one encoder count
 opt.k_var     = 0.2;            % robustness check: k*(1 +- k_var)
 opt.tau_var   = [0.021 0.045];  % robustness check: tau range [s]
 opt.Vmax      = 6;              % [V] used if the file has no Vmax
-opt.t_skip    = 1;              % [s] initial transient (home -> start of the path)
+opt.t_skip = 0;               % [s] t_hold (1.5) + one full lap (4): see section 5              
+                                % or 1 if [s] initial transient (home -> start of the path)
                                 %     excluded from the tracking/contour errors
 
 %% ===== Load and analyze =====
@@ -516,7 +517,7 @@ zw = 3e-3;
 
 figure('Name', 'Tip (x, y)', 'Color', 'w');
 tl = tiledlayout(2, 2, 'TileSpacing', 'compact');
-title(tl, 'Tip (logged data, after t_{skip} and before the disturbance)');
+title(tl, 'Tip (logged data, after t_{skip} and before the disturbance if present)');
 for z = 1:2
     nexttile; hold on; grid on; box on; axis equal
     h0 = plot(Pd(1,:), Pd(2,:), 'k--', 'LineWidth', 1.2);

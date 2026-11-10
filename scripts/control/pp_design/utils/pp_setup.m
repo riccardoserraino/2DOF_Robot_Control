@@ -8,19 +8,22 @@ function [mot, req] = pp_setup()
 %       mot(1).A, .B, .C, .G        state-space model in encoder degrees
 %       mot(1).Ai, .Bi              the same model with the integral state added
 %       mot(1).Cpid, .p_pid         the PID of pid_tune.m and its closed-loop poles
+%                                   (only READ, never retuned: it is the reference to compare with)
 %   req holds every requirement and setting. CHANGE THE NUMBERS ONLY HERE.
 
-%% 1. Requirements (theory pdf, section 5)
-req.R       = 10;      % [deg]   size of the reference step
+%% 1. Requirements (theory pdf, section 6)
+req.R       = 21;       % [deg] step of the size of the tracking errors
 req.OS_max  = 2;       % [%]     maximum overshoot
-req.ts_max  = 0.2;     % [s]     maximum settling time (2 % band)
+req.ts_max  = 0.3;     % [s]     maximum settling time (2 % band)
 req.Vmax    = 6;       % [V]     maximum voltage = saturation of the amplifier
 req.PM_min  = 45;      % [deg]   minimum phase margin (computed with the 3 ms delay)
-req.chatter = Inf;     % [V]     maximum voltage ripple caused by one encoder count
-req.lam_min = 2;       % [rad/s] slowest pole allowed. Independent of ts_max: the slow pole
-                       % can stay close to the PID one (about 2.6 rad/s), while the other
-                       % poles stay fast. Lower it to allow an even slower pole.
-                       % otherwise set it to 4/req.ts_max
+req.chatter = 0.5;     % [V]     switch ON the noise limit: it becomes the real cap on wn
+req.Ms_max  = 1.6;     % [-]     peak of |1/(1+L)| with the delay: robustness to all model errors
+                       %         (1.4 good, 1.6 acceptable, 2 minimum). Ms <= 1.6 -> GM >= 8.5 dB, PM >= 36 deg
+req.lam_min = 5;     % [rad/s] slowest pole allowed (= speed of the integral action).
+                       % 0.3 is just below the slow PID pole (about 0.36 rad/s): the search
+                       % may keep it. Raise it for a faster removal of loads, friction and
+                       % model errors (it can conflict with ts_max when beta = 1).
 % To neglect requirements instead of deleting them from the scripts, do the
 % following:
 % req.R       = Inf;      
@@ -28,7 +31,8 @@ req.lam_min = 2;       % [rad/s] slowest pole allowed. Independent of ts_max: th
 % req.ts_max  = Inf;     
 % req.Vmax    = Inf;      
 % req.PM_min  = 0;    
-% req.chatter = Inf;    
+% req.chatter = Inf;
+% req.Ms_max  = Inf;    
 % req.lam_min = 0;
 
 %% 2. Fixed settings
@@ -38,6 +42,8 @@ req.Ts = 0.002;                    % [s]   sample time of the real controller
 req.Td = 1.5*req.Ts;               % [s]   delay of the digital controller (theory pdf, section 2)
 req.q  = 360/4096;                 % [deg] one encoder count
 req.w  = 1e4;                      % weight of the penalty in the search (pp_search)
+req.N_pid = 100;                   % [rad/s] derivative filter of the PID block in CNC_pid_ff.slx
+                                   %         (used only to simulate the PID for the comparison)
 
 
 %% 3. Run pid_tune.m and take k, tau and the PID gains

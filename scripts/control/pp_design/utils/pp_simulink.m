@@ -15,6 +15,13 @@ function pp_simulink(mot, req, p, beta)
 %   lamf_xxxx            pole of the optional reference prefilter lamf/(s + lamf)
 %   k_xxxx_load, tau_xxxx_load, kp_xxxx, ki_xxxx, kd_xxxx   model and PID
 %   Vmax
+% and, before them, every variable of scripts/parameters.m, run in your workspace. Its
+% section 5 holds what the simulated plant needs (use_real_plant, w_eps, k_xxxx_plant,
+% tau_xxxx_plant, Td_xxxx, Vc_xxxx): Model_pp_obs.slx reads them too.
+
+%% 0. parameters.m in the base workspace (utils -> pp_design -> control -> scripts)
+params_file = fullfile(fileparts(mfilename('fullpath')), '..', '..', '..', 'parameters.m');
+evalin('base', sprintf('run(''%s'');', params_file));
 
 for i = 1:length(mot)
     m = mot(i);

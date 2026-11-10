@@ -44,7 +44,7 @@ disp(J_home);
 % The target must be inside the safe workspace (see singularities_plot.m).
 % q0 = home: it lies in the safe zone and every needed pose is reachable from it
 % without crossing a singularity.
-p_des = [0.06; 0.06];
+p_des = [0.1; 0.08];
 q0    = [0; 0];
 
 [q_sol, p_check, position_error, exitflag] = inverse_kinematic(p_des, q0, l, 'iter');

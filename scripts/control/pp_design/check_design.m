@@ -12,15 +12,15 @@ clear; clc; close all
 addpath(fullfile(fileparts(mfilename('fullpath')), 'utils'));     % make utils/ visible
 
 %% 1. Settings (the only lines to change)
-mode = 'poles';                % 'params' or 'poles'
+mode = 'params';                % 'params' or 'poles'
 
 % mode 'params' (same poles for both motors)
-wn    = 33;                     % [rad/s]
-zeta  = 0.945;                  % [-]  (0 < zeta < 1)
-alpha = 0.225;                  % [-]
+wn    = 26.886;                 % [rad/s] speed/stiffness: higher = faster, stiffer joint, more voltage and noise
+zeta  = 0.992;                  % [-] damping (0 < zeta < 1): higher = less oscillation/overshoot, a bit slower
+alpha = 0.011;                  % [-] integral speed: real pole = alpha*zeta*wn, higher = friction/load errors removed faster
 
 % mode 'poles' (one set of three poles per motor)
-p_3165 = [-33.72+10.44j -33.72-10.44j -0.36];          % motor 3165, e.g. [-31.2+10.8i; -31.2-10.8i; -7]
+p_3165 = [-33.72+10.44j -33.72-10.44j -0.36];          % motor 3165, e.g. [-31.2+10.8i -31.2-10.8i -7]
 p_3166 = [-32.84+9.64j -32.84-9.64j -0.36];          % motor 3166 (can be different from 3165)
 
 beta = 'one';                  % 'star' = beta* (steps), 'one' = 1 (trajectories), or a number

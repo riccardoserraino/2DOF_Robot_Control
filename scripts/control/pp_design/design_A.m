@@ -1,4 +1,4 @@
-%% DESIGN A - complex pair + one real pole      (theory: pp_design_theory.pdf, section 7)
+%% DESIGN A - complex pair + one real pole      (theory: pp_design_theory.pdf, sections 4 and 10)
 %   pair      : -zeta*wn +- j*wn*sqrt(1 - zeta^2)    wn = speed, zeta = damping
 %   real pole : -alpha*zeta*wn                        alpha < 1 -> slower than the pair
 %   beta*     : 1/(1 + 2*alpha*zeta^2) puts the zero of the step on the real pole, so the
@@ -13,10 +13,10 @@ addpath(fullfile(fileparts(mfilename('fullpath')), 'utils'));     % make utils/ 
 
 %% 1. Settings (the only lines to change)
 start_from_pid = true;          % true: start from the PID poles; false: from the 3 values below
-wn    = 30;                     % [rad/s]
-zeta  = 0.8;                    % [-]   (0 < zeta < 1)
-alpha = 0.3;                    % [-]
-beta_mode = 'one';             % 'star' = beta* (steps), 'one' = beta 1 (trajectories)
+wn    = 55;                     % [rad/s] speed/stiffness: higher = faster, stiffer joint, more voltage and noise
+zeta  = 0.9;                    % [-] damping (0 < zeta < 1): higher = less oscillation/overshoot, a bit slower
+alpha = 5/(zeta*wn);            % [-] integral speed: real pole = alpha*zeta*wn, higher = friction/load errors removed faster
+beta_mode = 'star';             % 'star' = beta* (steps), 'one' = beta 1 (trajectories)
 do_search = true;               % false: no search, keep the start values
 
 %% 2. Motors, PID and requirements
@@ -26,8 +26,16 @@ do_search = true;               % false: no search, keep the start values
 % beta = 1 the zero of the step always gives overshoot. So that requirement is switched off;
 % all the others (settling, voltage, phase margin, chatter, slowest pole) stay.
 if strcmp(beta_mode, 'one')
+    req.R       = 3;             % the type of deg error we expect on a path
     req.OS_max = Inf;
+    req.ts_max = Inf;            % with beta = 1 the step settling fights a fast integral pole
     fprintf('beta = 1 (trajectory design): overshoot requirement switched off.\n');
+% Step design
+else
+    req.R = 3;                  % the type of deg error we expect on a step
+    req.OS_max = 2;              % beta* cancels the slow pole, so the pair decides the overshoot
+    req.ts_max = 0.2;            % with beta = 1 the step settling fights a fast integral pole
+    fprintf('beta = * (step design): overshoot requirement switched on.\n');
 end
 
 %% 3. Start values from the PID poles
@@ -37,9 +45,9 @@ if start_from_pid
 end
 
 %% 4. Search (pp_search): moves wn, zeta, alpha as little as possible until all is met.
-% Note: the PID real pole is slow (a few rad/s). The requirement "slowest pole >= 8 rad/s"
-% (theory section 5) forces it to move a lot: with beta* it is hidden in the step, but it
-% still decides how fast the integrator removes load and model errors.
+% Note: the PID real pole is slow (about 0.36 rad/s). The requirement "slowest pole >= req.lam_min"
+% (pp_setup.m, theory section 6) decides how far it must move: with beta* it is hidden in the
+% step, but it still decides how fast the integrator removes load and model errors.
 if do_search
     x = pp_search(@poles_A, [wn, zeta, alpha], beta_mode, mot, req);
     wn    = x(1);

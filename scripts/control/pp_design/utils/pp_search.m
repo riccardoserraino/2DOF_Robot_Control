@@ -9,11 +9,11 @@ function x = pp_search(poles_fun, x_start, beta, mot, req)
 %   beta      : 'star', 'one' or a number
 %   x         : the parameters found
 %
-% THE COST (theory pdf, section 6)
+% THE COST (theory pdf, section 7)
 %   J(x) = distance(x) + w * penalty(x)
 %   distance = sum over the 3 poles of ( log|p| - log|p_start| )^2
 %              -> how far the poles moved. In logs, 10 -> 20 rad/s costs as much as 20 -> 40.
-%   penalty  = sum over the 6 requirements of max(0, v)^2
+%   penalty  = sum over the 7 requirements of max(0, v)^2
 %              -> zero when a requirement is met, grows with the square of the violation.
 %   w = 1e4 is large: any violation costs much more than moving the poles, so the search
 %   first meets every requirement, then stays as close as possible to the start.
@@ -57,7 +57,7 @@ function [J, v] = search_cost(y, poles_fun, p_start, beta, mot, req)
 p = poles_fun(exp(y));                            % poles for these parameters
 
 % requirements on BOTH motors: keep the worst value of each one
-v = -inf(6, 1);
+v = -inf(7, 1);
 for i = 1:length(mot)
     g = pp_gains(mot(i), p);
     r = closed_loop(mot(i), req, g, beta_number(g, beta));

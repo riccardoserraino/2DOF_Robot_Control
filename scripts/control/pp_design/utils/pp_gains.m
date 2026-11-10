@@ -24,7 +24,7 @@ g.ki = K(3);
 g.Kx = [g.k1, g.k2];
 g.p  = p(:);                         % the poles as a column
 
-%% 2. Reference weight beta (theory pdf, section 4)
+%% 2. Reference weight beta (theory pdf, section 5)
 % the step is  theta/r = (beta*a1*s + a0)/(s^3 + a2*s^2 + a1*s + a0): one zero at -a0/(beta*a1)
 a  = real(poly(p));                  % [1, a2, a1, a0]
 a1 = a(3);

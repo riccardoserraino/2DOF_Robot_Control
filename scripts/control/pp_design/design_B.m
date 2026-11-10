@@ -1,4 +1,4 @@
-%% DESIGN B - three real poles      (theory: pp_design_theory.pdf, section 7)
+%% DESIGN B - three real poles      (theory: pp_design_theory.pdf, sections 4 and 10)
 %   poles  : -l1, -l2, -l3            all real: no oscillating mode
 %   beta*  : the zero of the step cancels the slowest pole (steps)
 %   beta 1 : no weight on the reference (trajectories with feedforward)
@@ -27,8 +27,8 @@ if start_from_pid
 end
 
 %% 4. Search (pp_search): moves each speed as little as possible until all is met.
-% Each real pole moves on its own; the slowest one is pushed above 8 rad/s by the
-% requirement "slowest pole" (theory section 5).
+% Each real pole moves on its own; the slowest one is pushed above req.lam_min by the
+% requirement "slowest pole" (pp_setup.m, theory section 6).
 if do_search
     lambda = pp_search(@poles_B, lambda, beta_mode, mot, req);
 end
