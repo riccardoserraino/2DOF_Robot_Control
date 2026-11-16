@@ -87,7 +87,7 @@ function tag = run_and_save(model, do_run)
     % ---- controller gains and plant parameters (original names, no tag) ----
     % needed by validate_controllers to rebuild the loop (Ms, Nyquist, ...)
     pat  = ['^((kp|ki|kd|Kx|Ki|Kaw|Kffv|Kffa|A_obs|B_obs)_\d{4}' ...
-            '|(k|tau)_\d{4}_(load|noload)|Vmax|N_pid)$'];
+            '|(k|tau)_\d{4}_(load|noload|ff)|Vc_\d{4}(_ff)?|Vmax|N_pid)$'];
     vars = evalin('base', 'who');
     vars = vars(~cellfun(@isempty, regexp(vars, pat, 'once')));
     for k = 1:numel(vars)

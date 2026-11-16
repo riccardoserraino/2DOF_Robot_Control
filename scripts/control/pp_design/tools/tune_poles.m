@@ -12,10 +12,10 @@
 %           Solid = beta = 1 (trajectories), dashed = beta* (steps).
 %   STATS : sliders and boxes for wn, zeta, alpha, lock of alpha, gains and beta* of both
 %           motors, requirement table of both motors (PID, beta*, beta = 1; '*' = not met),
-%           "Write to Simulink" (same variables as design_A / check_design) and "Print".
+%           "Write to Simulink" (same variables as design_pp / check_design) and "Print".
 % While a slider moves a FAST model is used (Pade delay); on release everything is EXACT.
 clear; clc; close all
-addpath(fullfile(fileparts(mfilename('fullpath')), 'utils'));
+addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'utils'));
 
 %% Settings
 wn0     = 50;              % [rad/s] start value of wn
@@ -119,7 +119,7 @@ update(fig, 'fast');
 end
 
 function on_write(fig)
-% Same Simulink variables as design_A / check_design, for both motors
+% Same Simulink variables as design_pp / check_design, for both motors
 S = guidata(fig);
 modes = {'one', 'star'};
 pp_simulink(S.mot, S.req, poles_A(S.x), modes{S.s.beta.Value});
@@ -150,7 +150,7 @@ end
 
 %% ========================= computation ==================================
 function p = poles_A(x)
-% x = [wn, zeta, alpha] -> the three poles (column), as in design_A.m
+% x = [wn, zeta, alpha] -> the three poles (column), as in design_pp.m
 wn = x(1);   zeta = min(x(2), 0.999);   alpha = x(3);
 sigma = zeta*wn;   wd = wn*sqrt(1 - zeta^2);
 p = [-sigma + 1i*wd;  -sigma - 1i*wd;  -alpha*sigma];

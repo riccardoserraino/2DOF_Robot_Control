@@ -2,6 +2,10 @@
 slprj/
 *.slxc
 *.autosave
+*.asv
+*.aux
+*.log
+*.out
 *.slx.r20*
 *.mdl.r20*
 *_rtw/

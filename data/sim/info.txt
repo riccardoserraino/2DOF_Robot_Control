@@ -1,8 +1,16 @@
 - Model_pp_obs_20261109_B_square_nofric: design B, no friction model, R=10, slowest pole 0.3rad/s, old traj, no d
 - Model_pp_obs_20261109_A_square_nofric: design A, no friction model, R=10, slowest pole 0.3rad/s, old traj, no d (same params used for CNC_pp_obs_20261109_A_square)
 
-- Model_pp_obs_20261110_A1: beta one, R=3, OS and ts neglected, friction model, slowest pole 5rad/s, traj stop 1.5s when it arrives on the path, no d
-- Model_pp_obs_20261110_A2: beta star, R=21, OS and ts not neglected, friction model, slowest pole 5rad/s, traj stop 1.5s when it arrives on the path, no d
-- Model_pp_obs_20261110_A3: beta star, R=3, OS and ts not neglected, friction model, slowest pole 5rad/s, traj stop 1.5s when it arrives on the path, no d
+- Model_pp_obs_20261110_A1: beta one, R=3, OS and ts neglected, no friction model (use_real_plant=false), slowest pole 5rad/s, traj stop 1.5s when it arrives on the path, no d
+- Model_pp_obs_20261110_A2: beta star, R=21, OS and ts not neglected, no friction model (use_real_plant=false), slowest pole 5rad/s, traj stop 1.5s when it arrives on the path, no d
+- Model_pp_obs_20261110_A3: beta star, R=3, OS and ts not neglected, no friction model (use_real_plant=false), slowest pole 5rad/s, traj stop 1.5s when it arrives on the path, no d
 
-- Model_pid_ff_20261110: pid and ff, no d, friction model
+- Model_pid_ff_20261110: pid and ff, no d, no friction model (use_real_plant=false)
+
+- Model_pp_obs_20261115_A4: design A for tracking, start_from_pid false, wn=45rad/s, zeta=0.9, beta one, R=3, OS and ts neglected, slowest pole 12rad/s (alpha=12/(zeta*wn), lam_min=10), search on but poles unchanged (-40.5+-19.6j, -12), observer poles -250/-312.5 (capped at 250), Ki 11.0/11.7 (3165/3166), no friction model (use_real_plant=false), traj stop 1.5s when it arrives on the path, ff not corrected yet (improve_tracking.m not applied)
+
+- Model_pp_obs_20261115_A6: design A for tracking, req.Td = 1.5*Ts + 3.5ms = 6.5ms in pp_setup, start wn=45rad/s zeta=0.9 slowest pole 12rad/s, search moved the poles to wn=31.8rad/s zeta=0.999 slowest pole 10rad/s (= lam_min) -> poles -31.8+-1.5j, -10, observer poles -191/-239, Ki 4.6/4.9 (3165/3166), beta one, R=3, OS and ts neglected, use_real_plant=true (in Model_pp_obs this adds only the 3.5ms input delay and the term Vc*tanh(dphi_ref) in the controller; the motor model is still k_load/tau_load without friction), traj stop 1.5s when it arrives on the path, ff not corrected yet
+
+- Model_pp_obs_20261115_140156: first pass of design_pp.m, design PP v2 (design_pp.m, ff_source='sim'): same poles as A6 (req.Td 6.5ms, wn=31.8rad/s zeta=0.999 slowest pole 10rad/s, observer -191/-239, Ki 4.6/4.9), beta one, R=3, OS and ts neglected, use_real_plant=true (3.5ms input delay + Vc*tanh(dphi_ref) in the controller, motor model k_load/tau_load without friction), traj stop 1.5s when it arrives on the path, ff = model (k_ff=k_load, tau_ff=tau_load, Vc_ff=Vc=0.12/0.14)
+- Model_pp_obs_20261115_A7: final pass of design_pp.m, design PP v2 (design_pp.m, ff_source='sim'): same poles as A6 (req.Td 6.5ms, wn=31.8rad/s zeta=0.999 slowest pole 10rad/s, observer -191/-239, Ki 4.6/4.9), beta one, R=3, OS and ts neglected, use_real_plant=true (3.5ms input delay + Vc*tanh(dphi_ref) in the controller, motor model k_load/tau_load without friction), traj stop 1.5s when it arrives on the path, ff fitted on 140156: k_ff 1.4498/1.3868 (load 1.4367/1.3812), tau_ff 0.0425/0.0423 s (load 0.0374/0.0381: +4..5ms = the input delay), Vc_ff ~0 (no friction in the plant). NOTE: Model_pp_obs.slx saved on disk still reads k_load, tau_load and Vc_xxxx in the ff blocks, not the _ff variables: if the blocks were not changed before this run, the corrected ff was NOT applied and this run equals 140156
+- Model_pid_ff_20261115: pid and ff model, no d, no friction model (use_real_plant=true)

@@ -20,10 +20,16 @@ req.PM_min  = 45;      % [deg]   minimum phase margin (computed with the 3 ms de
 req.chatter = 0.5;     % [V]     switch ON the noise limit: it becomes the real cap on wn
 req.Ms_max  = 1.6;     % [-]     peak of |1/(1+L)| with the delay: robustness to all model errors
                        %         (1.4 good, 1.6 acceptable, 2 minimum). Ms <= 1.6 -> GM >= 8.5 dB, PM >= 36 deg
-req.lam_min = 5;     % [rad/s] slowest pole allowed (= speed of the integral action).
+req.lam_min = 10;     % [rad/s] slowest pole allowed (= speed of the integral action).
                        % 0.3 is just below the slow PID pole (about 0.36 rad/s): the search
                        % may keep it. Raise it for a faster removal of loads, friction and
                        % model errors (it can conflict with ts_max when beta = 1).
+% >>> TRACKING: with faster poles the active limits will be (in this order, usually)
+%   req.chatter (encoder noise amplified by large gains), req.Ms_max and req.PM_min (the
+%   3 ms delay), req.Vmax (only in the transient from home: start the path from the
+%   measured angle or with a ramp). The table of design_pp.m marks the one hit with *.
+%   req.lam_min: raise it to 10 to force a faster integral action in the search.
+%   req.Ts: if you lower the sample time in QUARC, change it here too (and Td follows).
 % To neglect requirements instead of deleting them from the scripts, do the
 % following:
 % req.R       = Inf;      
@@ -39,7 +45,7 @@ req.lam_min = 5;     % [rad/s] slowest pole allowed (= speed of the integral act
 req.t  = linspace(0, 1.5, 1500)';  % [s]   simulation time, 1500 points (column)
 req.d  = 0.5;                      % [V]   load step, only plotted by explore_poles
 req.Ts = 0.002;                    % [s]   sample time of the real controller
-req.Td = 1.5*req.Ts;               % [s]   delay of the digital controller (theory pdf, section 2)
+req.Td = 1.5*req.Ts + 0.0035;      % [s] ZOH + computation (1.5 Ts) + measured input delay (3.5 ms, parameters.m)
 req.q  = 360/4096;                 % [deg] one encoder count
 req.w  = 1e4;                      % weight of the penalty in the search (pp_search)
 req.N_pid = 100;                   % [rad/s] derivative filter of the PID block in CNC_pid_ff.slx

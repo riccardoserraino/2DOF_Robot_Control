@@ -8,7 +8,7 @@
 % of each motor, and writes the Simulink variables of both motors in the workspace.
 % To test poles chosen by hand without a search, use check_design.m.
 clear; clc; close all
-addpath(fullfile(fileparts(mfilename('fullpath')), 'utils'));     % make utils/ visible
+addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'utils'));     % make utils/ visible
 
 %% 1. Settings (the only lines to change)
 start_from_pid = true;          % true: start from the PID poles; false: from lambda below

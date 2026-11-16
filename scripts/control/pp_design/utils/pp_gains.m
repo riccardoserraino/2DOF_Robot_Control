@@ -39,6 +39,10 @@ g.beta.one   = 1;
 % observer poles: 6 times the fastest controller pole (the estimate must be faster than
 % the loop), but at most 250 rad/s = 0.5/Ts (the digital controller cannot do more).
 % The second observer pole is 25 % faster (acker needs two poles, they can also be equal).
+% >>> TRACKING: this cap is the real limit on wn. With wn = 55 the observer is already
+% only 250/55 = 4.5 times faster than the pair; with wn = 80 it would be 3 times (too slow:
+% the estimate lags and the loop loses margin). To go faster you need a shorter sample
+% time: Ts = 1 ms in QUARC and req.Ts = 0.001 in pp_setup.m -> cap 500 rad/s here.
 o1 = min(6*max(abs(p)), 250);
 o2 = 1.25*o1;
 g.p_obs = [-o1; -o2];

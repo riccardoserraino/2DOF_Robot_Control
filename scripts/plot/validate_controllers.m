@@ -23,8 +23,9 @@
 runs = {
 %  file: name only (searched in data/sim and data/lab), 'sim/...', 'lab/...' or full path
 %  file                                       type    label
-  'Model_pid_ff_20261110.mat',         'PID',   'PID'
-  'Model_pp_obs_20261110_A1.mat',           'PP',   'PP, beta=1'
+  'Model_pid_ff_20261115.mat',           'PID',   'PID + FF model'
+  %'Model_pp_obs_20261115_A6.mat',         'PP',   'PP + FF model'
+  'Model_pp_obs_20261115_A7.mat',           'PP',   'PP + FF fit'
 };
 
 %% ===== Options =====

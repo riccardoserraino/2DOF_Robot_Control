@@ -15,7 +15,7 @@ This guide covers two scripts:
 | content | names | used for |
 |---|---|---|
 | the signals of the **To Workspace** blocks | `r_3165`, `y_3165`, `u_3165`, `usat_3165`, `d_3165` (same for `3166`), `xc_des`, `yc_des`, `xc_real`/`xc_sim`, `yc_real`/`yc_sim`, each with the suffix `_<tag>` | errors, voltage, disturbance and step KPIs |
-| the **controller gains** found in the workspace | PID: `kp_xxxx`, `ki_xxxx`, `kd_xxxx`. PP: `Kx_xxxx`, `Ki_xxxx`, `Kaw_xxxx`, `A_obs_xxxx`, `B_obs_xxxx`, `Kffv_xxxx`, `Kffa_xxxx` | rebuilding the loop: margins, Ms, poles |
+| the **controller gains** found in the workspace | PID: `kp_xxxx`, `ki_xxxx`, `kd_xxxx`. PP: `Kx_xxxx`, `Ki_xxxx`, `Kaw_xxxx`, `A_obs_xxxx`, `B_obs_xxxx`. Feedforward (both): `k_xxxx_ff`, `tau_xxxx_ff`, `Vc_xxxx_ff` | rebuilding the loop: margins, Ms, poles; the feedforward used in the run |
 | the **plant model** | `k_xxxx_load`, `tau_xxxx_load`, `Vmax`, `run_tag` | the same |
 
 The gains are read from the workspace **at the moment of saving**. Save right after the run,
@@ -28,7 +28,10 @@ before you run another design script.
 ### Simulation
 
 1. Run a design script so the gains are in the workspace. Use `control/pid_tune.m` for the PID,
-   or `control/pp_design/design_A.m`, `design_B.m` or `check_design.m` for pole placement.
+   or `control/pp_design/design_pp.m` for pole placement (the exploration scripts are in
+   `control/pp_design/tools/`). With `ff_source = 'sim'`, `design_pp.m` also runs and saves the
+   two simulations (model feedforward, fitted feedforward) by itself: step 2 below is not needed.
+   For the PID the same feedforward fit is `ff_correct('Model_pid_ff', 'sim')` after `pid_tune.m`.
 2. In the command window:
    ```matlab
    run_and_save('Model_pp_obs')     % runs sim() and saves to data/sim

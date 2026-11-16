@@ -9,7 +9,7 @@
 % workspace (the models need both).
 % Theory: pp_design_theory.pdf.
 clear; clc; close all
-addpath(fullfile(fileparts(mfilename('fullpath')), 'utils'));     % make utils/ visible
+addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'utils'));     % make utils/ visible
 
 %% 1. Settings (the only lines to change)
 mode = 'params';                % 'params' or 'poles'

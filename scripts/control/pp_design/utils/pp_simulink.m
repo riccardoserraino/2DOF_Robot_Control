@@ -50,6 +50,13 @@ for i = 1:length(mot)
     assignin('base', ['lamf_'  m.name], a(4)/a(3));
     assignin('base', ['k_'   m.name '_load'], m.k);
     assignin('base', ['tau_' m.name '_load'], m.tau);
+    % feedforward (blocks Gain/Gain1 and MATLAB Function in "pp + luenberg xxxx"):
+    % default = the model (k_load, tau_load) and the Vc of parameters.m.
+    % ff_correct.m (scripts/control) overwrites these three with the values fitted on a run:
+    % run it AFTER this script, then simulate.
+    assignin('base', ['k_'   m.name '_ff'], m.k);
+    assignin('base', ['tau_' m.name '_ff'], m.tau);
+    assignin('base', ['Vc_'  m.name '_ff'], evalin('base', ['Vc_' m.name]));
     assignin('base', ['kp_' m.name], m.Cpid.Kp);
     assignin('base', ['ki_' m.name], m.Cpid.Ki);
     assignin('base', ['kd_' m.name], m.Cpid.Kd);

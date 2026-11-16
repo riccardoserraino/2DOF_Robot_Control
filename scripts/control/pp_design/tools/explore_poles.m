@@ -18,7 +18,7 @@
 %   real pole further left (larger alpha) -> faster integral action: friction and load
 %                                errors removed sooner, but more overshoot with beta = 1
 clear; clc; close all
-addpath(fullfile(fileparts(mfilename('fullpath')), 'utils'));
+addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'utils'));
 motor   = 2;               % 1 = motor 3165, 2 = motor 3166
 fps     = 20;              % max plot refreshes per second while dragging
 

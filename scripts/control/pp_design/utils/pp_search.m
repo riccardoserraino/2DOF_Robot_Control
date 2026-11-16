@@ -1,7 +1,7 @@
 function x = pp_search(poles_fun, x_start, beta, mot, req)
 % PP_SEARCH  Finds the poles closest to the start that meet every requirement.
 %
-% HOW TO USE (inside design_A / design_B)
+% HOW TO USE (inside design_pp / design_B)
 %   x = pp_search(@poles_A, [wn, zeta, alpha], 'star', mot, req);
 %   poles_fun : the pole pattern of the design script. The @ passes the function itself,
 %               so the search can call it: poles_fun(x) returns the three poles.

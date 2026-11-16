@@ -37,3 +37,11 @@ fprintf('3165: Kp = %.4f  Ki = %.4f  Kd = %.4f  (PM = %.1f deg, wc = %.1f rad/s)
         kp_3165, ki_3165, kd_3165, info_3165.PhaseMargin, info_3165.CrossoverFrequency);
 fprintf('3166: Kp = %.4f  Ki = %.4f  Kd = %.4f  (PM = %.1f deg, wc = %.1f rad/s)\n', ...
         kp_3166, ki_3166, kd_3166, info_3166.PhaseMargin, info_3166.CrossoverFrequency);
+
+%% 4. Feedforward (blocks Gain/Gain1 and MATLAB Function in "PID+FF xxxx")
+% Default = the model (k_load, tau_load) and the Vc of parameters.m. To correct it with
+% the inverse model identified on a run (theory in ff_correct.m), after this script:
+%   ff_correct('Model_pid_ff', 'sim')                  simulation: fit + final run
+%   ff_correct('', 'run', 'lab/CNC_pid_ff_<date>.mat') robot: fit on a bench run
+k_3165_ff = k_3165_load;   tau_3165_ff = tau_3165_load;   Vc_3165_ff = Vc_3165;
+k_3166_ff = k_3166_load;   tau_3166_ff = tau_3166_load;   Vc_3166_ff = Vc_3166;
