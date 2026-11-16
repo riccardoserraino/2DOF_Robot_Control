@@ -9,7 +9,8 @@ function [mot, req] = pp_setup()
 %       mot(1).Ai, .Bi              the same model with the integral state added
 %       mot(1).Cpid, .p_pid         the PID of pid_tune.m and its closed-loop poles
 %                                   (only READ, never retuned: it is the reference to compare with)
-%   req holds every requirement and setting. CHANGE THE NUMBERS ONLY HERE.
+%   req holds every requirement and setting: these are the DEFAULTS. design_pp.m replaces
+%   the requirements written in its section 1.
 
 %% 1. Requirements (theory pdf, section 6)
 req.R       = 21;       % [deg] step of the size of the tracking errors
@@ -45,7 +46,7 @@ req.lam_min = 10;     % [rad/s] slowest pole allowed (= speed of the integral ac
 req.t  = linspace(0, 1.5, 1500)';  % [s]   simulation time, 1500 points (column)
 req.d  = 0.5;                      % [V]   load step, only plotted by explore_poles
 req.Ts = 0.002;                    % [s]   sample time of the real controller
-req.Td = 1.5*req.Ts + 0.0035;      % [s] ZOH + computation (1.5 Ts) + measured input delay (3.5 ms, parameters.m)
+req.Td =0.5*req.Ts + 0.0035;      % [s] ZOH  (0.5 Ts) + measured input delay (3.5 ms, parameters.m)
 req.q  = 360/4096;                 % [deg] one encoder count
 req.w  = 1e4;                      % weight of the penalty in the search (pp_search)
 req.N_pid = 100;                   % [rad/s] derivative filter of the PID block in CNC_pid_ff.slx

@@ -36,15 +36,15 @@ g.beta.star  = g.beta_star;
 g.beta.one   = 1;
 
 %% 3. Observer gain (theory pdf, section 3)
-% observer poles: 6 times the fastest controller pole (the estimate must be faster than
-% the loop), but at most 250 rad/s = 0.5/Ts (the digital controller cannot do more).
-% The second observer pole is 25 % faster (acker needs two poles, they can also be equal).
-% >>> TRACKING: this cap is the real limit on wn. With wn = 55 the observer is already
-% only 250/55 = 4.5 times faster than the pair; with wn = 80 it would be 3 times (too slow:
-% the estimate lags and the loop loses margin). To go faster you need a shorter sample
-% time: Ts = 1 ms in QUARC and req.Ts = 0.001 in pp_setup.m -> cap 500 rad/s here.
-o1 = min(6*max(abs(p)), 250);
-o2 = 1.25*o1;
+% Observer poles 2.5 and 3 times the fastest controller pole (rule of thumb 2-3 times):
+% fast enough for the estimate to settle before the loop reacts, slow enough not to
+% amplify the encoder quantization. Compared with 6 times, the controller gain at high
+% frequency (the noise on u) drops about 5 times; the margins drop a little, and the
+% search in design_pp.m takes that into account (closed_loop includes the observer).
+% Cap: 250 rad/s = 0.5/Ts, what the 2 ms digital controller can follow.
+obs_factor = [6, 6];               % observer poles / fastest controller pole
+o1 = min(obs_factor(1)*max(abs(p)), 250);
+o2 = min(obs_factor(2)*max(abs(p)), 300);
 g.p_obs = [-o1; -o2];
 % eig(A - L*C) = observer poles. acker works on (A', C') because eig(A - L*C) = eig(A' - C'*L')
 g.L = acker(m.A', m.C', g.p_obs)';

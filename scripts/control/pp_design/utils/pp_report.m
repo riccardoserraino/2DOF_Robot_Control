@@ -1,14 +1,17 @@
-function pp_report(mot, req, p, beta, name)
+function pp_report(mot, req, p, beta, name, show_plots)
 % PP_REPORT  Requirement table (terminal) and step plots for the poles p.
 %
 % HOW TO USE
 %   pp_report(mot, req, p, 'star', 'Design A')      both motors
 %   pp_report(mot(2), req, p, 0.7, 'Check')         only motor 3166
+%   pp_report(mot, req, p, 'one', 'Design', false)  table only, no figures
 %   beta: 'star', 'one' or a number (the design choice, marked in the title)
 %
 % For every motor given it prints one table and draws one figure with three cases:
 %   PID,  beta = beta*,  beta = 1   (beta changes only the step, not the poles,
 %   theory pdf section 5). '*' in the table marks a requirement not met.
+
+if nargin < 6, show_plots = true; end   % figures on unless asked otherwise
 
 labels = {'PID', 'beta*', 'beta=1'};
 
@@ -51,7 +54,9 @@ for i = 1:length(mot)
         fprintf(' %9.2f\n', lim(j));
     end
 
-    plot_steps(m, req, R, labels, p, name, b);
+    if show_plots
+        plot_steps(m, req, R, labels, p, name, b);
+    end
 end
 fprintf('\n* = not met. Phase margin and slowest pole are minimum values, the others maximum.\n');
 fprintf(['The PID gains never change. Its column changes only if req changes (R, Td, N_pid) or a\n' ...

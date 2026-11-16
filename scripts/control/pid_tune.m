@@ -2,10 +2,11 @@
 % Run this script (from scripts/control) before simulating CNC_pid_ff.slx or
 % Model_pid_ff.slx: it loads every parameter the models need and computes
 % the PID gains of both motors.
+clear; clc; close all
 
 %% 0. Load the workspace
-clear; clc; close all;
-run('../parameters.m');     % motor constants + identified k, tau (both motors)
+here = fileparts(mfilename('fullpath'));          % folder of pid_tune.m
+run(fullfile(here, '..', 'parameters.m'));      % motor constants + identified k, tau (both motors)
 
 %% 1. Plant: identified model with the link attached, output in encoder degrees
 % G(s) = k/(s*(tau*s + 1)) is in rad/V; -180/pi converts to degrees and
@@ -20,8 +21,8 @@ sys_3166_load = k_3166_load/(s*(tau_3166_load*s + 1)) * (-180/pi);
 % pm = 90 deg   : no overshoot, so neither axis overshoots the path corners.
 % Same specs on both motors -> same closed-loop dynamics on both axes, so
 % the coupled four-bar linkage does not distort the shape in the xy-plane.
-wc       = 20;              % Crossover frequency [rad/s]
-pm       = 90;              % Phase margin [deg]
+wc       = 80;              % Crossover frequency [rad/s]
+pm       = 50;              % Phase margin [deg]
 pid_type = 'PID';           % (not 'type': that would shadow a built-in)
 opts = pidtuneOptions('PhaseMargin', pm, 'CrossoverFrequency', wc, ...
                       'DesignFocus', 'reference-tracking');
@@ -37,11 +38,3 @@ fprintf('3165: Kp = %.4f  Ki = %.4f  Kd = %.4f  (PM = %.1f deg, wc = %.1f rad/s)
         kp_3165, ki_3165, kd_3165, info_3165.PhaseMargin, info_3165.CrossoverFrequency);
 fprintf('3166: Kp = %.4f  Ki = %.4f  Kd = %.4f  (PM = %.1f deg, wc = %.1f rad/s)\n', ...
         kp_3166, ki_3166, kd_3166, info_3166.PhaseMargin, info_3166.CrossoverFrequency);
-
-%% 4. Feedforward (blocks Gain/Gain1 and MATLAB Function in "PID+FF xxxx")
-% Default = the model (k_load, tau_load) and the Vc of parameters.m. To correct it with
-% the inverse model identified on a run (theory in ff_correct.m), after this script:
-%   ff_correct('Model_pid_ff', 'sim')                  simulation: fit + final run
-%   ff_correct('', 'run', 'lab/CNC_pid_ff_<date>.mat') robot: fit on a bench run
-k_3165_ff = k_3165_load;   tau_3165_ff = tau_3165_load;   Vc_3165_ff = Vc_3165;
-k_3166_ff = k_3166_load;   tau_3166_ff = tau_3166_load;   Vc_3166_ff = Vc_3166;

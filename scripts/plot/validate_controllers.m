@@ -23,9 +23,9 @@
 runs = {
 %  file: name only (searched in data/sim and data/lab), 'sim/...', 'lab/...' or full path
 %  file                                       type    label
-  'Model_pid_ff_20261115.mat',           'PID',   'PID + FF model'
-  %'Model_pp_obs_20261115_A6.mat',         'PP',   'PP + FF model'
-  'Model_pp_obs_20261115_A7.mat',           'PP',   'PP + FF fit'
+%  type = 'PID' or 'PP' (used to rebuild the loop); label = any text for the legend
+  'Model_pid_ff_old_square.mat',    'PID',  'PID+FF'
+  'Model_pp_obs_20261116_173309.mat',    'PP',   'PP+FF'
 };
 
 %% ===== Options =====
@@ -34,7 +34,7 @@ opt.enc_res   = 360/4096;       % [deg] one encoder count
 opt.k_var     = 0.2;            % robustness check: k*(1 +- k_var)
 opt.tau_var   = [0.021 0.045];  % robustness check: tau range [s]
 opt.Vmax      = 6;              % [V] used if the file has no Vmax
-opt.t_skip = 0;               % [s] t_hold (1.5) + one full lap (4): see section 5              
+opt.t_skip = 8;               % [s] t_hold (1.5) + one full lap (4): see section 5              
                                 % or 1 if [s] initial transient (home -> start of the path)
                                 %     excluded from the tracking/contour errors
 
