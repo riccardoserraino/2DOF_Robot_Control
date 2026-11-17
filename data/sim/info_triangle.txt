@@ -1,0 +1,24 @@
+REQUIREMENTS
+  peak voltage      <= 6 V   (test step of 3 deg)
+  phase margin      >= 45 deg
+  chatter           <= 0.275 V
+  slowest pole      >= 10 rad/s
+  Ms                <= 1.6
+  overshoot         <= Inf %,  settling <= Inf s  (Inf = off)
+SETTINGS
+  Ts = 2 ms,  delay Td = 4.5 ms,  observer cap = [250 300] rad/s
+  * = requirement not met
+
+Files in data folder are named like this:
+Model_pp_obs_<trajectory>_<obs_speed>_<traj_speed_setting>
+
+---------------------------------------------------------------------------
+
+SPEED SET TO 1 IN THE MATLABFUNCTION, 6seconds simulation
+
+tune wrt the following search done by observer_study
+wn_list     = [35, 37, 39, 41];
+zeta_list   = [0.9, 0.999, 1.1];
+lambda_list = [8, 10, 11];               
+
+---------------------------------------------------------------------------

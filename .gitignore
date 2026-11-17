@@ -31,3 +31,9 @@ scripts/model_id/J_classic.m
 Thumbs.db
 desktop.ini
 
+# ---- pp design ----
+scripts/control/pp_design/docs/*.tex
+scripts/control/pp_design/tools/design_B.m
+scripts/control/pp_design/tools/check_design.m
+
+

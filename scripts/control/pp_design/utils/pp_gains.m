@@ -1,13 +1,15 @@
-function g = pp_gains(m, p)
-% PP_GAINS  Gains that put the three closed-loop poles exactly in p.
+function g = pp_gains(m, p, req)
+% PP_GAINS  Gains that put the three closed-loop poles exactly in p, and the observer.
 %
 % HOW TO USE
-%   g = pp_gains(mot(1), [-30+10i; -30-10i; -7]);
+%   g = pp_gains(mot(1), [-30+10i; -30-10i; -7], req);
 %   g.k1, g.k2  state-feedback gains (angle, speed)      g.Kx = [k1 k2]
 %   g.ki        integral gain
-%   g.L         observer gain (2 x 1)
+%   g.L         observer gain (2 x 1),  g.p_obs its two poles
 %   g.beta_star reference weight that cancels the slowest real pole
 %   g.beta      the two choices by name: g.beta.star, g.beta.one
+%   req is only read for the observer settings: req.obs_factor, req.obs_max
+%   (defaults in pp_setup.m, changed in section 1 of design_pp.m). Nothing is set here.
 %
 % THEORY (pp_design_theory.pdf, section 3)
 %   state z = [theta; omega; eI],  control u = -K*z  with  K = [k1, k2, ki]
@@ -36,16 +38,13 @@ g.beta.star  = g.beta_star;
 g.beta.one   = 1;
 
 %% 3. Observer gain (theory pdf, section 3)
-% Observer poles 2.5 and 3 times the fastest controller pole (rule of thumb 2-3 times):
-% fast enough for the estimate to settle before the loop reacts, slow enough not to
-% amplify the encoder quantization. Compared with 6 times, the controller gain at high
-% frequency (the noise on u) drops about 5 times; the margins drop a little, and the
-% search in design_pp.m takes that into account (closed_loop includes the observer).
-% Cap: 250 rad/s = 0.5/Ts, what the 2 ms digital controller can follow.
-obs_factor = [6, 6];               % observer poles / fastest controller pole
-o1 = min(obs_factor(1)*max(abs(p)), 250);
-o2 = min(obs_factor(2)*max(abs(p)), 300);
-g.p_obs = [-o1; -o2];
+% observer pole i = obs_factor(i) * (fastest controller pole), but never faster than
+% obs_max(i). Separation principle: the closed-loop poles are the 3 controller poles
+% plus these 2, so they do not change p; they change only how fast the estimation error
+% dies, how much encoder noise reaches u, and how much a wrong model biases the estimate.
+p_fast  = max(abs(p));
+o       = min(req.obs_factor(:).*p_fast, req.obs_max(:));   % [rad/s], 2 x 1
+g.p_obs = -o;
 % eig(A - L*C) = observer poles. acker works on (A', C') because eig(A - L*C) = eig(A' - C'*L')
 g.L = acker(m.A', m.C', g.p_obs)';
 end

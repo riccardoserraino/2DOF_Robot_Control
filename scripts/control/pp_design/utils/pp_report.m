@@ -9,7 +9,7 @@ function pp_report(mot, req, p, beta, name, show_plots)
 %
 % For every motor given it prints one table and draws one figure with three cases:
 %   PID,  beta = beta*,  beta = 1   (beta changes only the step, not the poles,
-%   theory pdf section 5). '*' in the table marks a requirement not met.
+%   theory pdf section 5). '*' marks a requirement not met, '!' an active one (at its limit).
 
 if nargin < 6, show_plots = true; end   % figures on unless asked otherwise
 
@@ -17,7 +17,7 @@ labels = {'PID', 'beta*', 'beta=1'};
 
 for i = 1:length(mot)
     m = mot(i);
-    g = pp_gains(m, p);
+    g = pp_gains(m, p, req);
     b = beta_number(g, beta);
 
     % the three simulations (cell array: R{1} ... R{3})
@@ -40,14 +40,18 @@ for i = 1:length(mot)
             m.Cpid.Kp, m.Cpid.Ki, m.Cpid.Kd, req.N_pid);
     fprintf('test step R = %g deg: overshoot and settling are relative to R, peak voltage scales with R\n', req.R);
     fprintf('poles = %s,  beta* = %.3f,  beta used = %.3f\n', mat2str(p.', 4), g.beta_star, b);
+    fprintf('observer poles = %s rad/s (factor %s x fastest pole %.1f, cap %s)\n', ...
+            mat2str(g.p_obs.', 4), mat2str(req.obs_factor(:).', 3), max(abs(p)), mat2str(req.obs_max(:).', 4));
     fprintf('%-22s %9s %9s %9s %9s\n', 'requirement', labels{1}, labels{2}, labels{3}, 'limit');
     for j = 1:7
         fprintf('%-22s', names{j});
         for k = 1:3
-            if V(j, k) <= 0
-                mark = ' ';
+            if V(j, k) > 1e-3
+                mark = '*';          % violated
+            elseif V(j, k) > -0.03
+                mark = '!';          % active: within 3 % of its limit, it is what stops the design
             else
-                mark = '*';
+                mark = ' ';          % met with room to spare
             end
             fprintf(' %8.2f%s', X(j, k), mark);
         end
@@ -58,7 +62,8 @@ for i = 1:length(mot)
         plot_steps(m, req, R, labels, p, name, b);
     end
 end
-fprintf('\n* = not met. Phase margin and slowest pole are minimum values, the others maximum.\n');
+fprintf('\n* = not met, ! = active (within 3 %% of the limit: this is what limits the poles).\n');
+fprintf('Phase margin and slowest pole are minimum values, the others maximum.\n');
 fprintf(['The PID gains never change. Its column changes only if req changes (R, Td, N_pid) or a\n' ...
          'design script switches a requirement off (e.g. overshoot with beta = 1).\n']);
 end

@@ -1,6 +1,0 @@
-- Model_pid_ff_old_square: pid and ff, no d, friction model (use_real_plant=true)
-- Model_pp_obs_old_square: beta one, friction model (use_real_plant=true), 
-
-- Model_pid_ff_old_crf: pid and ff, no d, friction model (use_real_plant=true)
-- Model_pp_obs_old_crf: beta one, neglected friction model (use_real_plant=true), 
-

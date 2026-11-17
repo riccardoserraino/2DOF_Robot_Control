@@ -17,15 +17,21 @@
 % From the MODEL (gains + k, tau): Ms, margins, Nyquist, Bode, |S|, |T|, root locus.
 % From the DATA: joint/tip errors, command and saturation, disturbance and step KPIs.
 % The feedforward is outside the loop: it does not change any robustness result.
-%clear; clc; close all
+clear; clc; close all
 
 %% ===== Runs to compare (edit here) =====
 runs = {
 %  file: name only (searched in data/sim and data/lab), 'sim/...', 'lab/...' or full path
 %  file                                       type    label
 %  type = 'PID' or 'PP' (used to rebuild the loop); label = any text for the legend
-  'Model_pid_ff_old_square.mat',    'PID',  'PID+FF'
-  'Model_pp_obs_20261116_173309.mat',    'PP',   'PP+FF'
+  'Model_pp_obs_square_66_1.mat',    'PP',  'PP+FF obs[6;6]'
+  'Model_pp_obs_square_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
+  'Model_pp_obs_circle_66_1.mat',    'PP',  'PP+FF obs[6;6]'
+  'Model_pp_obs_circle_5565_1.mat',    'PP',  ['PP+FF obs[5.5;6.5]'
+  'Model_pp_obs_triangle_66_1].mat',    'PP',  'PP+FF obs[6;6]'
+  'Model_pp_obs_triangle_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
+  'Model_pp_obs_star_66_1.mat',    'PP',  'PP+FF obs[6;6]'
+  'Model_pp_obs_star_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
 };
 
 %% ===== Options =====
@@ -34,7 +40,8 @@ opt.enc_res   = 360/4096;       % [deg] one encoder count
 opt.k_var     = 0.2;            % robustness check: k*(1 +- k_var)
 opt.tau_var   = [0.021 0.045];  % robustness check: tau range [s]
 opt.Vmax      = 6;              % [V] used if the file has no Vmax
-opt.t_skip = 8;               % [s] t_hold (1.5) + one full lap (4): see section 5              
+opt.f_hf   = 20;             % [Hz] 'voltage above f_hf' = vibrations (HF part of u)
+opt.t_skip = 0;               % [s] t_hold (1.5) + one full lap (4): see section 5              
                                 % or 1 if [s] initial transient (home -> start of the path)
                                 %     excluded from the tracking/contour errors
 
@@ -82,6 +89,7 @@ rows_data = {
   'e_rms',      'Joint error RMS [deg]'
   'u_peak',     'Peak |u| before saturation [V]'
   'sat',        'Time in saturation [%]'
+  'u_hf',       'Voltage above f_hf, RMS [V] (vibrations)'
   'dist_peak',  'Disturbance: peak error [deg]'
   'dist_rec',   'Disturbance: recovery [s]'
   'dist_IAE',   'Disturbance: IAE [deg s]'
@@ -93,12 +101,42 @@ rows_tip = {
   'contour_max', 'Contour error max [mm]'
   'contour_rms', 'Contour error RMS [mm]'
   'track_max',   'Tracking error max [mm]'
+  'track_rms',   'Tracking error RMS [mm]'
 };
 for i = 1:2
     print_table(['MODEL - motor ' motors{i}], rows_model, [mdl(i,:).kpi], names);
     print_table(['DATA - motor ' motors{i}],  rows_data,  [dat(i,:).kpi], names);
 end
 print_table('TIP (x, y)', rows_tip, [tip.kpi], names);
+
+% --- summary: one number per run (joints: mean of the two motors, margins: worst motor) ---
+rows_sum = {
+  'joint_rms',   'Joint error RMS, mean of motors [deg]'
+  'joint_max',   'Joint error max, mean of motors [deg]'
+  'track_rms',   'Tip tracking error RMS [mm]'
+  'track_max',   'Tip tracking error max [mm]'
+  'contour_rms', 'Contour error RMS [mm]'
+  'contour_max', 'Contour error max [mm]'
+  'dist_peak',   'Disturbance peak error, mean [deg]'
+  'dist_IAE',    'Disturbance IAE, mean [deg s]'
+  'u_peak',      'Peak |u|, worst motor [V]'
+  'u_hf',        'Voltage above f_hf, worst motor [V]'
+  'noise',       'Encoder noise on u, worst motor [V/count]'
+  'Ms',          'Ms, worst motor [-]'
+  'PM',          'PM, worst motor [deg]'
+};
+K = [];                                   % one struct per run
+for j = 1:nR
+    a = [dat(1,j).kpi, dat(2,j).kpi];   m = [mdl(1,j).kpi, mdl(2,j).kpi];
+    K(j).joint_rms   = mean([a.e_rms]);       K(j).joint_max = mean([a.e_max]);
+    K(j).track_rms   = tip(j).kpi.track_rms;  K(j).track_max = tip(j).kpi.track_max;
+    K(j).contour_rms = tip(j).kpi.contour_rms; K(j).contour_max = tip(j).kpi.contour_max;
+    K(j).dist_peak   = mean([a.dist_peak]);   K(j).dist_IAE  = mean([a.dist_IAE]);
+    K(j).u_peak      = max([a.u_peak]);       K(j).u_hf      = max([a.u_hf]);
+    K(j).noise       = max([m.noise]);        K(j).Ms        = max([m.Ms]);
+    K(j).PM          = min([m.PM]);
+end
+print_table('SUMMARY (all runs)', rows_sum, K, names);
 fprintf(['NaN = not available in that run (no disturbance / no step / not recovered).\n' ...
          'Tracking errors: from t_skip = %g s to the start of the disturbance.\n'], opt.t_skip);
 
@@ -216,6 +254,7 @@ d.t = t;  d.r = r;  d.y = y;  d.e = e;  d.u = u;  d.t_dist = t_dist;
 k.e_max  = max(abs(e(track)));
 k.e_rms  = sqrt(mean(e(track).^2));
 k.u_peak = max(abs(u));
+k.u_hf   = hf_rms(u(track), t(track), opt.f_hf);   % RMS of u above f_hf (vibrations)
 if all(isnan(u)), k.sat = 100*mean(abs(us) >= 0.999*opt.Vmax);
 else,             k.sat = 100*mean(abs(u)  >= opt.Vmax);
 end
@@ -269,7 +308,7 @@ xd = get_signal(S, 'xc_des',  t);
 yd = get_signal(S, 'yc_des',  t);
 p = struct('t', t, 'P', [], 'Pd', [], 'e_track', [], 'e_contour', [], ...
            'before', [], 'kpi', []);
-k.contour_max = NaN;  k.contour_rms = NaN;  k.track_max = NaN;
+k.contour_max = NaN;  k.contour_rms = NaN;  k.track_max = NaN;  k.track_rms = NaN;
 if isempty(t) || isempty(yr) || isempty(xd) || isempty(yd)
     warning('Tip signals (xc_real, yc_real, xc_des, yc_des) missing in a run');
     p.kpi = k;  return
@@ -283,8 +322,22 @@ p.e_contour(before) = dist_to_path(p.P(:,before), p.Pd(:,before));
 k.contour_max = 1e3*max(p.e_contour(before));
 k.contour_rms = 1e3*sqrt(mean(p.e_contour(before).^2));
 k.track_max   = 1e3*max(p.e_track(before));
+k.track_rms   = 1e3*sqrt(mean(p.e_track(before).^2));
 p.before = before;
 p.kpi = k;
+end
+
+function v = hf_rms(u, t, f_hf)
+% RMS of the part of u above f_hf [Hz], from the FFT (Parseval): no toolbox needed.
+% NaN if u was not logged.
+if numel(u) < 4 || any(isnan(u)), v = NaN; return; end
+u  = u(:) - mean(u);
+N  = numel(u);
+Ts = median(diff(t));
+f  = (0:N-1)'/(N*Ts);
+f  = min(f, 1/Ts - f);                    % |frequency| of each FFT bin
+U  = fft(u);
+v  = sqrt(sum(abs(U(f > f_hf)).^2))/N;
 end
 
 function d = dist_to_path(P, Q)

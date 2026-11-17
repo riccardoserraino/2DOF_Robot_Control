@@ -13,7 +13,9 @@ function pp_simulink(mot, req, p, beta)
 %   A_obs_xxxx, B_obs_xxxx   observer  xhat' = A_obs*xhat + B_obs*[u; y]
 %   beta_xxxx            reference weight (Gain block on phi before the Mux)
 %   lamf_xxxx            pole of the optional reference prefilter lamf/(s + lamf)
-%   k_xxxx_load, tau_xxxx_load, kp_xxxx, ki_xxxx, kd_xxxx   model and PID
+%   k_xxxx_load, tau_xxxx_load   OVERWRITTEN with the model of the controller (plant of
+%                        parameters.m): the feedforward Gain blocks read these two names
+%   kp_xxxx, ki_xxxx, kd_xxxx   PID
 %   Vmax
 % and, before them, every variable of scripts/parameters.m, run in your workspace. Its
 % section 5 holds what the simulated plant needs (use_real_plant, w_eps, k_xxxx_plant,
@@ -25,7 +27,7 @@ evalin('base', sprintf('run(''%s'');', params_file));
 
 for i = 1:length(mot)
     m = mot(i);
-    g = pp_gains(m, p);
+    g = pp_gains(m, p, req);
     if ischar(beta)
         b = g.beta.(beta);
     else
@@ -48,15 +50,12 @@ for i = 1:length(mot)
     % lamf = a0/a1 puts the filter pole on the zero of the step -> step without overshoot
     a = real(poly(p));
     assignin('base', ['lamf_'  m.name], a(4)/a(3));
+    % feedforward: the Gain blocks compute -(1/k_xxxx_load)*dphi and
+    % -(1/k_xxxx_load)*tau_xxxx_load*ddphi. Writing the controller model (k_xxxx_plant,
+    % tau_xxxx_plant) into these two names makes the feedforward use the SAME model as
+    % gains and observer. With use_real_plant = false the values do not change.
     assignin('base', ['k_'   m.name '_load'], m.k);
     assignin('base', ['tau_' m.name '_load'], m.tau);
-    % feedforward (blocks Gain/Gain1 and MATLAB Function in "pp + luenberg xxxx"):
-    % default = the model (k_load, tau_load) and the Vc of parameters.m.
-    % ff_correct.m (scripts/control) overwrites these three with the values fitted on a run:
-    % run it AFTER this script, then simulate.
-    assignin('base', ['k_'   m.name '_ff'], m.k);
-    assignin('base', ['tau_' m.name '_ff'], m.tau);
-    assignin('base', ['Vc_'  m.name '_ff'], evalin('base', ['Vc_' m.name]));
     assignin('base', ['kp_' m.name], m.Cpid.Kp);
     assignin('base', ['ki_' m.name], m.Cpid.Ki);
     assignin('base', ['kd_' m.name], m.Cpid.Kd);

@@ -236,7 +236,7 @@ end
 function update(fig, mode)
 % Compute (fast or exact) and update the existing graphic objects of both windows
 S = guidata(fig);   h = S.h;   st = S.s;   req = S.req;
-g = pp_gains(S.m, S.p);
+g = pp_gains(S.m, S.p, S.req);
 if strcmp(mode, 'fast'), E = eval_fast(S, g); else, E = eval_exact(S, g); end
 bs = g.beta_star;
 
@@ -415,7 +415,7 @@ end
 %% ========================= printing =====================================
 function print_poles(S)
 % Current poles, pattern, gains and beta* in the command window
-g = pp_gains(S.m, S.p);
+g = pp_gains(S.m, S.p, S.req);
 fprintf('\npoles    : %s rad/s\n', pole_str(S.p));
 fprintf('           %s\n', pair_str(S.p));
 fprintf('gains    : k1 = %.4f  k2 = %.5f  ki = %.4f   beta* = %.3f\n', g.k1, g.k2, g.ki, g.beta_star);

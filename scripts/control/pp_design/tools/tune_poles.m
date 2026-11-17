@@ -131,7 +131,7 @@ fprintf('\nwn = %.2f rad/s   zeta = %.3f   alpha = %.4f   (real pole %.2f rad/s)
         S.x(1), S.x(2), S.x(3), S.x(3)*S.x(2)*S.x(1));
 fprintf('poles = %s rad/s\n', mat2str(p.', 4));
 for i = 1:2
-    g = pp_gains(S.mot(i), p);
+    g = pp_gains(S.mot(i), p, S.req);
     fprintf('motor %s: Kx = %s   Ki = %.4f   beta* = %.3f   observer = %s rad/s\n', ...
             S.mot(i).name, mat2str(g.Kx, 4), g.ki, g.beta_star, mat2str(g.p_obs.', 4));
 end
@@ -213,7 +213,7 @@ function update(fig, mode)
 S = guidata(fig);   h = S.h;   st = S.s;   req = S.req;
 p = poles_A(S.x);
 for i = 1:2
-    g{i} = pp_gains(S.mot(i), p);                                          %#ok<AGROW>
+    g{i} = pp_gains(S.mot(i), p, S.req);                                          %#ok<AGROW>
     if strcmp(mode, 'fast'), E{i} = eval_fast(S.mot(i), S.Gp{i}, S, g{i}); %#ok<AGROW>
     else,                    E{i} = eval_exact(S.mot(i), S, g{i});         %#ok<AGROW>
     end

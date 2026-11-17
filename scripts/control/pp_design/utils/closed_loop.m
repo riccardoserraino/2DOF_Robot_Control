@@ -8,7 +8,7 @@ function r = closed_loop(m, req, ctrl, beta)
 %
 % WHAT IS SIMULATED (pp_design_theory.pdf, section 2)
 %   ut = u + d          the load d is a voltage added at the motor input
-%   delay of 3 ms       the motor model gets InputDelay = Td: the voltage arrives 3 ms late
+%   delay Td           the motor model gets InputDelay = req.Td: the voltage arrives Td late
 %   no saturation       the model is linear: the requirement "peak voltage <= 6 V" keeps it valid
 % OUTPUT r
 %   r.y_r, r.u_r   angle and voltage for a step of req.R degrees in the reference

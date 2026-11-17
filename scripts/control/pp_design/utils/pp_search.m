@@ -59,7 +59,7 @@ p = poles_fun(exp(y));                            % poles for these parameters
 % requirements on BOTH motors: keep the worst value of each one
 v = -inf(7, 1);
 for i = 1:length(mot)
-    g = pp_gains(mot(i), p);
+    g = pp_gains(mot(i), p, req);
     r = closed_loop(mot(i), req, g, beta_number(g, beta));
     v_motor = pp_check(r, p, req);
     v = max(v, v_motor);
