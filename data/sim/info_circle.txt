@@ -22,3 +22,23 @@ zeta_list   = [0.9, 0.999, 1.1];
 lambda_list = [8, 10, 11];               
 
 ---------------------------------------------------------------------------
+
+==== wn39 z0.9 l11 obs6   (wn 39 rad/s, zeta 0.9, real pole 11 rad/s, observer 6x = [234 234] rad/s)
+    requirement            limit      motor 3165 motor 3166
+    peak voltage [V]       <= 6           2.903      3.064 
+    phase margin [deg]     >= 45         46.062     45.647 
+    chatter [V]            <= 0.275       0.255      0.274 
+    slowest pole [rad/s]   >= 10         11.000     11.000 
+    Ms [-]                 <= 1.6         1.635*     1.646*
+    result: NOT met: Ms
+    run file(s): Model_pp_obs_circle_66_1.mat
+
+==== wn39 z0.9 l11 obs5.5-6.5   (wn 39 rad/s, zeta 0.9, real pole 11 rad/s, observer 5.5-6.5x = [215 254] rad/s)
+    requirement            limit      motor 3165 motor 3166
+    peak voltage [V]       <= 6           2.903      3.064 
+    phase margin [deg]     >= 45         46.029     45.615 
+    chatter [V]            <= 0.275       0.254      0.272 
+    slowest pole [rad/s]   >= 10         11.000     11.000 
+    Ms [-]                 <= 1.6         1.636*     1.647*
+    result: NOT met: Ms
+    run file(s): Model_pp_obs_circle_5565_1.mat

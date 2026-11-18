@@ -36,9 +36,9 @@ beta_mode  = 'one';                    % trajectories with feedforward
 
 % designs to compare: every combination of wn, zeta, lambda and the ROWS of obs_list
 wn_list     = [35, 37, 39, 41];                % [rad/s] speed of the joint
-zeta_list   = [0.9, 0.999, 1.1];            % [-]     damping of the pair
+zeta_list   = [0.7 0.8 0.9, 0.999];            % [-]     damping of the pair
 lambda_list = [8, 10, 11];                % [rad/s] real pole (integral action)
-obs_list    = [6 6];                 % [-]     observer: one ROW per option, [factor pole 1, factor pole 2]
+obs_list    = [5.5 6.5];                 % [-]     observer: one ROW per option, [factor pole 1, factor pole 2]
                                        %         x fastest controller pole. Equal = double pole,
                                        %         e.g. [5 5; 6 6; 7 7; 5.5 6.5; 6 7.5]
 

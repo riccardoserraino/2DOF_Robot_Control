@@ -24,12 +24,12 @@ runs = {
 %  file: name only (searched in data/sim and data/lab), 'sim/...', 'lab/...' or full path
 %  file                                       type    label
 %  type = 'PID' or 'PP' (used to rebuild the loop); label = any text for the legend
-  'Model_pp_obs_square_66_1.mat',    'PP',  'PP+FF obs[6;6]'
-  'Model_pp_obs_square_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
-  'Model_pp_obs_circle_66_1.mat',    'PP',  'PP+FF obs[6;6]'
-  'Model_pp_obs_circle_5565_1.mat',    'PP',  ['PP+FF obs[5.5;6.5]'
-  'Model_pp_obs_triangle_66_1].mat',    'PP',  'PP+FF obs[6;6]'
-  'Model_pp_obs_triangle_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
+  % 'Model_pp_obs_square_66_1.mat',    'PP',  'PP+FF obs[6;6]'
+  % 'Model_pp_obs_square_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
+  % 'Model_pp_obs_circle_66_1.mat',    'PP',  'PP+FF obs[6;6]'
+  % 'Model_pp_obs_circle_5565_1.mat',    'PP',  ['PP+FF obs[5.5;6.5]'
+  % 'Model_pp_obs_triangle_66_1].mat',    'PP',  'PP+FF obs[6;6]'
+  % 'Model_pp_obs_triangle_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
   'Model_pp_obs_star_66_1.mat',    'PP',  'PP+FF obs[6;6]'
   'Model_pp_obs_star_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
 };
@@ -41,7 +41,7 @@ opt.k_var     = 0.2;            % robustness check: k*(1 +- k_var)
 opt.tau_var   = [0.021 0.045];  % robustness check: tau range [s]
 opt.Vmax      = 6;              % [V] used if the file has no Vmax
 opt.f_hf   = 20;             % [Hz] 'voltage above f_hf' = vibrations (HF part of u)
-opt.t_skip = 0;               % [s] t_hold (1.5) + one full lap (4): see section 5              
+opt.t_skip = 1.5;               % [s] t_hold (1.5) + one full lap (4): see section 5              
                                 % or 1 if [s] initial transient (home -> start of the path)
                                 %     excluded from the tracking/contour errors
 
