@@ -12,6 +12,9 @@
 %       xc_sim (or xc_real) yc_sim (or yc_real) xc_des yc_des     [m]
 %   - the gains of the controller used in that run
 %       PID: kp_xxxx ki_xxxx kd_xxxx        PP: Kx_xxxx Ki_xxxx A_obs_xxxx B_obs_xxxx
+%       MPC: no fixed gains (the control law changes along the path and with the
+%            constraints): the MODEL robustness analysis is skipped (NaN in the
+%            tables) and only the DATA and TIP KPIs are computed
 %   - the plant parameters k_xxxx_load, tau_xxxx_load (from parameters.m)
 %
 % From the MODEL (gains + k, tau): Ms, margins, Nyquist, Bode, |S|, |T|, root locus.
@@ -21,12 +24,8 @@
 %% ===== Runs to compare (edit here) =====
 runs = {
 %  file: name only (searched in data/sim and data/lab), 'sim/...', 'lab/...' or full path
-%  file                                       type    label
-  [config1 '.mat'],           'PID',   'wc=30 pm=60'
-  [config2 '.mat'],           'PID',   'wc=40 pm=50'
-  [config3 '.mat'],           'PID',   'wc=50 pm=50'
-  [config4 '.mat'],           'PID',   'wc=60 pm=50'
-  [config5 '.mat'],           'PID',   'wc=60 pm=50'
+%  file                                       type    label   (type: 'PID' | 'PP' | 'MPC')
+  [mpc1 '.mat'],                              'MPC',  'contour'
 };
 
 %% ===== Options =====
@@ -35,7 +34,7 @@ opt.enc_res   = 360/4096;       % [deg] one encoder count
 opt.k_var     = 0.2;            % robustness check: k*(1 +- k_var)
 opt.tau_var   = [0.021 0.045];  % robustness check: tau range [s]
 opt.Vmax      = 6;              % [V] used if the file has no Vmax
-opt.t_skip    = 8;              % [s] initial transient (home -> start of the path)
+opt.t_skip    = 2;              % [s] initial transient (home -> start of the path)
                                 %     excluded from the tracking/contour errors
 
 %% ===== Load and analyze =====
@@ -51,6 +50,7 @@ for j = 1:nR
     end
 end
 
+clear mdl dat tip            % results of a previous call (it is a script): avoid stale columns
 for j = 1:nR
     f = find_run(runs{j,1}, data_dir);
     fprintf('Run %d: %s\n', j, f);
@@ -104,7 +104,7 @@ fprintf(['NaN = not available in that run (no disturbance / no step / not recove
 
 %% ===== Plots =====
 col = lines(nR);
-for i = 1:2, plot_robustness(mdl(i,:), names, col, ['motor ' motors{i}]); end
+for i = 1:2, plot_robustness(mdl(i,:), names, col, ['motor ' motors{i}]); end   % skips MPC runs
 plot_joints(dat, names, col, motors, opt);
 plot_tests(dat, names, col, motors);
 plot_tip(tip, names, col);
@@ -117,6 +117,16 @@ plot_tip(tip, names, col);
 function m = model_kpi(S, type, mot, opt)
 % Loop functions from the model: plant G (from k, tau) and feedback part of
 % the controller Cfb (u = -Cfb*y, reference and feedforward set to zero).
+if strcmpi(type, 'MPC')
+    % MPC: no fixed LTI controller (time-varying cost along the path, and a
+    % nonlinear law when the constraints are active) -> no loop analysis
+    m = struct('L', [], 'w', [], 'Lw', [], 'Sw', [], 'Tw', [], 'cl_poles', [], 'bundle', {{}});
+    names = {'Ms','GM_from_Ms','PM_from_Ms','GM','PM','wc','delay_margin_ms', ...
+             'noise','slow_sigma','slow_zeta','Ms_worst'};
+    for n = 1:numel(names), k.(names{n}) = NaN; end
+    m.kpi = k;
+    return
+end
 G   = plant_ss(S.(['k_' mot '_load']), S.(['tau_' mot '_load']));
 Cfb = feedback_controller(S, type, mot, opt);
 
@@ -189,7 +199,7 @@ switch upper(type)
         Ac = [Aobs - B*Kx, -B*Ki; zeros(1,2), 0];
         Cfb = -ss(Ac, [L; -1], [-Kx, -Ki], 0);
     otherwise
-        error('Unknown controller type "%s" (use PID or PP)', type);
+        error('Unknown controller type "%s" (use PID, PP or MPC)', type);
 end
 end
 
@@ -223,7 +233,10 @@ end
 % --- disturbance test: error change after d starts
 [k.dist_peak, k.dist_rec, k.dist_IAE] = deal(NaN);
 d.tp = [];  d.ep = [];
-if isfinite(t_dist)
+if isfinite(t_dist) && nnz(t >= t_dist) < 2
+    warning(['Motor %s: the disturbance starts at t = %.3f s, at the end of the run: ' ...
+             'no samples to evaluate it (start it earlier or extend the Stop time).'], mot, t_dist);
+elseif isfinite(t_dist)
     pre = t >= t_dist - 0.1 & t < t_dist;
     if any(pre), e0 = mean(e(pre)); else, e0 = e(i_d); end
     post = t >= t_dist;
@@ -377,6 +390,9 @@ disp(tbl);
 end
 
 function plot_robustness(m, names, col, label)
+keep  = arrayfun(@(x) ~isempty(x.L), m);   % MPC runs have no loop functions
+if ~any(keep), return; end
+m = m(keep);  names = names(keep);  col = col(keep, :);
 nR = numel(m);
 light = @(c) 0.35*c + 0.65;
 th = linspace(0, 2*pi, 200);
@@ -511,9 +527,19 @@ v   = diff(Pd, 1, 2);
 v   = v(:, vecnorm(v) > 1e-9);                     % drop repeated points
 ang = abs(atan2(v(1,1:end-1).*v(2,2:end) - v(2,1:end-1).*v(1,2:end), ...
                 sum(v(:,1:end-1).*v(:,2:end), 1)));
-[~, ic] = max(ang);
+[amax, ic] = max([ang, 0]);
 P_unique = Pd(:, [true, vecnorm(diff(Pd,1,2)) > 1e-9]);
-pc = P_unique(:, min(ic+1, size(P_unique,2)));
+if amax > deg2rad(20)
+    % polygon (square, triangle): zoom on the sharpest corner
+    pc = P_unique(:, min(ic+1, size(P_unique,2)));
+    zoom_title = 'Zoom on the sharpest corner';
+else
+    % smooth path (circle): no corner, zoom where the contour error is largest
+    jw = find(ok, 1);
+    [~, im] = max(tip(jw).e_contour);
+    pc = tip(jw).Pd(:, im);
+    zoom_title = sprintf('Zoom on the largest contour error (%s)', names{jw});
+end
 zw = 3e-3;
 
 figure('Name', 'Tip (x, y)', 'Color', 'w');
@@ -533,7 +559,7 @@ for z = 1:2
         title('Path'); legend([h0, h], [{'desired'}, lab], 'Location', 'best');
     else
         xlim(pc(1) + [-zw zw]); ylim(pc(2) + [-zw zw]);
-        title(sprintf('Zoom on the sharpest corner (\\pm%g mm)', 1e3*zw));
+        title(sprintf('%s (\\pm%g mm)', zoom_title, 1e3*zw));
     end
 end
 nexttile; hold on; grid on; box on

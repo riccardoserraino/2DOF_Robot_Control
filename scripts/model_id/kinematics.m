@@ -4,8 +4,8 @@
 %   D = [2l - l*sin(theta); l*cos(theta)]     (right motor, angle theta)
 %   C = midpoint of BD + h * (unit vector perpendicular to BD)
 % Generates FK_classic.m and J_classic.m (git-ignored): run this script first.
-clear; clc; close all;
-run('../parameters.m');
+here = fileparts(mfilename('fullpath'));          % folder of kinematics.m
+run(fullfile(here, '..', 'parameters.m'));
 
 %% 1. Symbolic forward kinematics
 syms phi_s theta_s l_s real

@@ -47,7 +47,7 @@ tau_3166_load   = 0.038119941238613;
 %   Td    = pure delay at the motor input [s] (ZOH of the 2 ms controller excluded)
 %   Vc    = Coulomb friction as equivalent input voltage [V]
 %   w_eps = width of the smooth transition around zero speed [rad/s] (tanh)
-use_real_plant = false;     % true -> realistic plant, false -> plant equal to the model
+use_real_plant = true;     % true -> realistic plant, false -> plant equal to the model
 w_eps = 0.02;              % [rad/s] about 1 deg/s; raise to 0.05 if the simulation is slow
 
 if use_real_plant
