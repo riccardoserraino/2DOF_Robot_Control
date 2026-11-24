@@ -17,21 +17,15 @@
 % From the MODEL (gains + k, tau): Ms, margins, Nyquist, Bode, |S|, |T|, root locus.
 % From the DATA: joint/tip errors, command and saturation, disturbance and step KPIs.
 % The feedforward is outside the loop: it does not change any robustness result.
-clear; clc; close all
+% clear; clc; close all
 
 %% ===== Runs to compare (edit here) =====
 runs = {
 %  file: name only (searched in data/sim and data/lab), 'sim/...', 'lab/...' or full path
 %  file                                       type    label
 %  type = 'PID' or 'PP' (used to rebuild the loop); label = any text for the legend
-  % 'Model_pp_obs_square_66_1.mat',    'PP',  'PP+FF obs[6;6]'
-  % 'Model_pp_obs_square_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
-  % 'Model_pp_obs_circle_66_1.mat',    'PP',  'PP+FF obs[6;6]'
-  % 'Model_pp_obs_circle_5565_1.mat',    'PP',  ['PP+FF obs[5.5;6.5]'
-  % 'Model_pp_obs_triangle_66_1].mat',    'PP',  'PP+FF obs[6;6]'
-  % 'Model_pp_obs_triangle_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
-  'Model_pp_obs_star_66_1.mat',    'PP',  'PP+FF obs[6;6]'
-  'Model_pp_obs_star_5565_1.mat',    'PP',  'PP+FF obs[5.5;6.5]'
+   'Model_pp_obs_20261124_191227_7.mat',    'PP',  'PP+FF obs[3;3] model '
+  % 'CNC_pp_obs_square_44_1.mat',    'PP',  'PP+FF obs[4;4] real'
 };
 
 %% ===== Options =====

@@ -1,4 +1,4 @@
-function [x, y, vx, vy, ax, ay] = circle_gen_smooth(t)
+function [x, y, vx, vy, ax, ay] = circle_single(t)
 % CIRCLE_GEN_SMOOTH  Circle for the tip C, for a MATLAB Function block.
 %   1. t < t_app          : straight line from home to the start point (no step)
 %   2. t < t_app + t_wait : stop at the start point
@@ -10,17 +10,26 @@ function [x, y, vx, vy, ax, ay] = circle_gen_smooth(t)
 %% Settings (change here)
 speed  = 1;                 % [-] 1 = one lap in T0; 2 = twice as fast (acceleration x4)
 T0     = 4;                 % [s] lap time at speed = 1
-D      = 0.070;             % [m] diameter
+D      = 0.085;             % [m] diameter
 c      = [0.127; 0.127];    % [m] centre of the circle (home of the tip)
 home   = [0.127; 0.127];    % [m] tip position at t = 0
 th0    = 5*pi/4;            % [rad] start point on the circle (5*pi/4 = bottom-left)
 t_app  = 1.0;               % [s] time of the approach home -> start point
 t_wait = 0.5;               % [s] stop at the start point before the laps
-n_laps = Inf;               % number of laps, then stop at the start point
+n_laps = 2;                 % number of laps, then stop at the start point
+t_tail = 0.5;               % [s] still time after the last lap
 ccw    = true;              % true = counter-clockwise, false = clockwise
 
+%% Query (t < 0, never used by Simulink, only by check_trajectory.m / traj_select(-1, id)):
+%   x = Stop Time to set, y = start of the laps, vx = lap time, vy = speed, ax = end of the motion
+T  = T0/speed;                              % [s] lap time
+t0 = t_app + t_wait;                        % [s] start of the laps
+if t < 0
+    x = t0 + n_laps*T + t_tail;  y = t0;  vx = T;  vy = speed;  ax = t0 + n_laps*T;  ay = 0;
+    return
+end
+
 %% Approach, stop, laps
-T  = T0/speed;
 r  = D/2;
 P0 = c + r*[cos(th0); sin(th0)];            % start point on the circle
 tl = t - t_app - t_wait;                    % time since the start of the laps

@@ -1,4 +1,4 @@
-function [x, y, vx, vy, ax, ay] = triangle_gen_smooth(t)
+function [x, y, vx, vy, ax, ay] = triangle_single(t)
 % TRIANGLE_GEN_SMOOTH  Equilateral triangle for the tip C, for a MATLAB Function block.
 %   1. t < t_app          : straight line from home to the first vertex (no step)
 %   2. t < t_app + t_wait : stop at the first vertex
@@ -10,13 +10,23 @@ function [x, y, vx, vy, ax, ay] = triangle_gen_smooth(t)
 %% Settings (change here)
 speed  = 1;                 % [-] 1 = one lap in T0; 2 = twice as fast (acceleration x4)
 T0     = 4;                 % [s] lap time at speed = 1
-s      = 0.060;             % [m] side of the triangle
+s      = 0.075;             % [m] side of the triangle
 c      = [0.127; 0.127];    % [m] centroid of the triangle (home of the tip)
 home   = [0.127; 0.127];    % [m] tip position at t = 0
 t_app  = 1.0;               % [s] time of the approach home -> first vertex
 t_wait = 0.5;               % [s] stop at the first vertex before the laps
-n_laps = Inf;               % number of laps, then stop at the first vertex
+n_laps = 2;                 % number of laps, then stop at the first vertex
+t_tail = 0.5;               % [s] still time after the last lap
 ccw    = true;              % true = counter-clockwise, false = clockwise
+
+%% Query (t < 0, never used by Simulink, only by check_trajectory.m / traj_select(-1, id)):
+%   x = Stop Time to set, y = start of the laps, vx = lap time, vy = speed, ax = end of the motion
+T  = T0/speed;                              % [s] lap time
+t0 = t_app + t_wait;                        % [s] start of the laps
+if t < 0
+    x = t0 + n_laps*T + t_tail;  y = t0;  vx = T;  vy = speed;  ax = t0 + n_laps*T;  ay = 0;
+    return
+end
 
 %% Vertices: bottom-left, bottom-right, top, back to bottom-left
 h = s*sqrt(3)/2;            % height

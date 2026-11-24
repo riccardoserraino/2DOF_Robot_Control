@@ -1,0 +1,116 @@
+REQUIREMENTS
+  peak voltage      <= 6 V   (test step of 3 deg)
+  phase margin      >= 45 deg
+  chatter           <= 0.275 V
+  slowest pole      >= 10 rad/s
+  Ms                <= 1.6
+  overshoot         <= Inf %,  settling <= Inf s  (Inf = off)
+SETTINGS
+  Ts = 2 ms,  delay Td = 4.5 ms,  observer cap = [250 300] rad/s
+  * = requirement not met
+
+Files in data folder are named like this:
+Model_pp_obs_<trajectory>_<obs_speed>_<traj_speed_setting>
+
+---------------------------------------------------------------------------
+
+-- Settings of pp_tune.m
+
+model_name = 'Model_pp_obs';               % simulation model in slx/
+traj_id    = 7;                            % path (traj_select.m): 1 square, 2 square_speeds,
+                                           % 3 circle, 4 triangle, 5 star, 6 rhombus, 7 traj_sequence
+path_time  = true;                         % true : Stop Time = length of the path
+                                           % false: keep the Stop Time saved in the model
+
+wn_list     = [20, 24, 28, 32, 35, 37];        % [rad/s] speed of the joint
+zeta_list   = [0.8, 0.9, 1.0, 1.1, 1.2];             % [-]     damping of the pair (> 1: two real poles)
+ifac_list   = [0.3, 0.5, 0.7, 1];               % [-]     integral pole: lambda = ifac*zeta*wn [rad/s]
+                                            %         (check "slowest pole" limit in lim below)
+obs_list    = [3 3; 4 4; 5 5];              % [-]     one ROW per observer option [pole 1, pole 2]
+                                            %           x fastest controller pole
+         
+---------------------------------------------------------------------------
+
+-- BEST FOR EACH OBSERVER OPTION (score among the accepted designs)
+   observer best design                  score |    PM    Ms  wc [rad/s] | accepted
+   3x       wn24 z1.1 i0.5 obs3           1.01 |  50.9  1.52  26.7/ 27.1 | 6 of 120
+   4x       wn20 z1.1 i0.7 obs4           1.02 |  52.4  1.46  25.2/ 25.6 | 5 of 120
+   5x       wn20 z1.1 i0.5 obs5           1.01 |  57.7  1.37  23.6/ 24.0 | 6 of 120
+
+==== 50  wn24 z1.1 i0.5 obs3   (wn 24 rad/s, zeta 1.1, lambda = 0.5 x zeta*wn = 13.2 rad/s, observer 3x = [112 112] rad/s)
+    requirement            limit      motor 3165 motor 3166
+    peak voltage [V]       <= 4.8         1.612      1.701 
+    phase margin [deg]     >= 45         51.172     50.884 
+    Ms [-]                 <= 1.6         1.508      1.517 
+    chatter [V]            <= 0.1         0.084      0.091 
+    slowest pole [rad/s]   >= 10         13.200     13.200 
+    crossover wc [rad/s]   <= 40         26.701     27.119 
+    result: all met
+    run file(s): Model_pp_obs_20261124_191227_7.mat
+
+==== 199  wn20 z1.1 i0.7 obs4   (wn 20 rad/s, zeta 1.1, lambda = 0.7 x zeta*wn = 15.4 rad/s, observer 4x = [125 125] rad/s)
+    requirement            limit      motor 3165 motor 3166
+    peak voltage [V]       <= 4.8         1.364      1.440 
+    phase margin [deg]     >= 45         52.616     52.397 
+    Ms [-]                 <= 1.6         1.454      1.462 
+    chatter [V]            <= 0.1         0.081      0.088 
+    slowest pole [rad/s]   >= 10         12.835     12.835 
+    crossover wc [rad/s]   <= 40         25.162     25.583 
+    result: all met
+    run file(s): Model_pp_obs_20261124_192950_7.mat
+
+==== 289  wn20 z1.1 i0.5 obs5   (wn 20 rad/s, zeta 1.1, lambda = 0.5 x zeta*wn = 11.0 rad/s, observer 5x = [156 156] rad/s)
+    requirement            limit      motor 3165 motor 3166
+    peak voltage [V]       <= 4.8         1.119      1.181 
+    phase margin [deg]     >= 45         57.882     57.724 
+    Ms [-]                 <= 1.6         1.360      1.367 
+    chatter [V]            <= 0.1         0.089      0.096 
+    slowest pole [rad/s]   >= 10         11.000     11.000 
+    crossover wc [rad/s]   <= 40         23.573     24.046 
+    result: all met
+    run file(s): Model_pp_obs_20261124_201653_7.mat
+
+---------------------------------------------------------------------------
+
+-- OVERALL BEST WITH COHERENT MARGINS  (PM >= 45 deg, Ms <= 1.6, wc in [20, 40] rad/s, motor mismatch <= 15 %)
+   rank design                       score |    PM    Ms  wc [rad/s]  mism. |  tip RMS [mm]  contour [mm]
+   1    wn24 z1.1 i0.5 obs3           1.01 |  50.9  1.52  26.7/ 27.1   1.6% |         0.646  0.416/ 3.198
+   2    wn20 z1.1 i0.5 obs5           1.01 |  57.7  1.37  23.6/ 24.0   2.0% |         0.650  0.423/ 3.129
+   3    wn20 z1.2 i0.7 obs3           1.01 |  52.2  1.50  25.9/ 26.3   1.6% |         0.655  0.422/ 3.157
+
+   >>> OVERALL BEST: wn24 z1.1 i0.5 obs3  -> copy wn, zeta, lambda = ifac*zeta*wn and the observer
+       factor into pole_place.m (lambda in rad/s, see the ==== line of the report).
+
+
+==== 50  wn24 z1.1 i0.5 obs3   (wn 24 rad/s, zeta 1.1, lambda = 0.5 x zeta*wn = 13.2 rad/s, observer 3x = [112 112] rad/s)
+    requirement            limit      motor 3165 motor 3166
+    peak voltage [V]       <= 4.8         1.612      1.701 
+    phase margin [deg]     >= 45         51.172     50.884 
+    Ms [-]                 <= 1.6         1.508      1.517 
+    chatter [V]            <= 0.1         0.084      0.091 
+    slowest pole [rad/s]   >= 10         13.200     13.200 
+    crossover wc [rad/s]   <= 40         26.701     27.119 
+    result: all met
+    run file(s): Model_pp_obs_20261124_191227_7.mat
+
+==== 289  wn20 z1.1 i0.5 obs5   (wn 20 rad/s, zeta 1.1, lambda = 0.5 x zeta*wn = 11.0 rad/s, observer 5x = [156 156] rad/s)
+    requirement            limit      motor 3165 motor 3166
+    peak voltage [V]       <= 4.8         1.119      1.181 
+    phase margin [deg]     >= 45         57.882     57.724 
+    Ms [-]                 <= 1.6         1.360      1.367 
+    chatter [V]            <= 0.1         0.089      0.096 
+    slowest pole [rad/s]   >= 10         11.000     11.000 
+    crossover wc [rad/s]   <= 40         23.573     24.046 
+    result: all met
+    run file(s): Model_pp_obs_20261124_201653_7.mat
+
+==== 85  wn20 z1.2 i0.7 obs3   (wn 20 rad/s, zeta 1.2, lambda = 0.7 x zeta*wn = 16.8 rad/s, observer 3x = [112 112] rad/s)
+    requirement            limit      motor 3165 motor 3166
+    peak voltage [V]       <= 4.8         1.527      1.612 
+    phase margin [deg]     >= 45         52.478     52.191 
+    Ms [-]                 <= 1.6         1.487      1.495 
+    chatter [V]            <= 0.1         0.081      0.087 
+    slowest pole [rad/s]   >= 10         10.734     10.734 
+    crossover wc [rad/s]   <= 40         25.877     26.299 
+    result: all met
+    run file(s): Model_pp_obs_20261124_191630_7.mat

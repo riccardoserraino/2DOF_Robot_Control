@@ -1,0 +1,228 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array}
+\usepackage{enumitem}
+\usepackage{framed}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlist{nosep,leftmargin=1.2em}
+
+% --- the five kinds of entry in the call trees (all black text) ---
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\step}[1]{\textbf{\texttt{\detokenize{#1}}}}              % step of the script
+\newcommand{\loc}[1]{\textit{\texttt{\detokenize{#1}}}}               % local function (same file)
+\newcommand{\utl}[1]{\underline{\texttt{\detokenize{#1}}}}            % function of utils/
+\newcommand{\mat}[1]{\texttt{\detokenize{#1}}}                       % MATLAB function
+\newcommand{\lp}[1]{\textsc{#1}}                                     % loop
+\newcommand{\dd}{~---~}
+
+% a level of the tree: a thin bar on the left, nested levels are indented
+\newenvironment{tr}{%
+  \def\FrameCommand{{\color{black!45}\vrule width 0.6pt}\hspace{6pt}}%
+  \MakeFramed{\advance\hsize-\width\FrameRestore}\small}%
+  {\endMakeFramed}
+\newcommand{\row}[1]{#1\par}
+\setlength{\OuterFrameSep}{1pt}
+
+\begin{document}
+
+{\LARGE\bfseries pp\_design: what runs, step by step}\\[2pt]
+{\large the folder \code{scripts/control/pp_design}, every call of the two main scripts, also the hidden ones in \code{utils/}}
+
+\vspace{6pt}
+\textbf{Legend:} \step{script step} \quad \loc{local function} (inside the same file) \quad
+\utl{utils function} \quad \mat{MATLAB function} \quad \lp{loop}
+
+%==========================================================================================
+\section*{The folder}
+
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+file & what it is for \\
+\midrule
+\code{design_pp.m} & \textbf{main script}: builds the chosen design, prints its requirement table and writes the
+  Simulink variables for \code{Model_pp_obs} (simulation) and \code{CNC_pp_obs} (robot) \\
+\code{tools/observer_study.m} & \textbf{comparison}: builds many designs (lists of $\omega_n$, $\zeta$, $\lambda$ and observer
+  speed), checks them, simulates each one and writes a report for \code{validate_controllers} \\
+\code{tools/design_B.m} & alternative pattern: three real poles instead of a pair + a real pole \\
+\code{tools/check_design.m} & poles given by hand, no search: only checks them and writes them \\
+\code{tools/tune_poles.m} & sliders for $\omega_n$, $\zeta$, $\alpha$ on both motors, live plots \\
+\code{tools/explore_poles.m} & drag the three poles of one motor on the pole map, live plots \\
+\midrule
+\code{utils/pp_setup.m} & motor models (\code{k_xxxx_plant}, \code{tau_xxxx_plant} of \code{parameters.m}), PID of
+  \code{pid_tune.m} for comparison, \emph{default} requirements and settings \\
+\code{utils/pp_gains.m} & poles $\to$ gains $k_1,k_2,k_i$ (Ackermann), reference weight $\beta^*$, observer gain $L$ \\
+\code{utils/closed_loop.m} & closed loop with the delay: test step, load step, margins, $M_s$, chatter \\
+\code{utils/pp_check.m} & the 7 requirements: value, limit and relative violation \\
+\code{utils/pp_search.m} & moves the poles as little as possible until every requirement is met \\
+\code{utils/pp_report.m} & requirement table (PID, $\beta^*$, $\beta=1$) and optional step plots \\
+\code{utils/pp_simulink.m} & writes the variables read by the Simulink models \\
+\bottomrule
+\end{tabularx}
+
+\textbf{Typical use.} (1) \code{observer_study.m} with a few candidate values $\to$ report and simulations;
+(2) compare the runs with \code{validate_controllers.m} and choose; (3) copy the chosen values into section 1 of
+\code{design_pp.m} and run it; (4) run \code{Model_pp_obs} or \code{CNC_pp_obs}.
+
+\begin{framed}
+\textbf{Which $\beta$?} $\beta$ weights the reference in the state feedback; it is a choice, not a result of the search.
+\code{pp_gains} computes $\beta^*=a_0/(a_1\lambda)$ (the zero of the step cancels the real pole), \code{pp_report} shows
+$\beta^*$ and $\beta=1$ side by side.
+\begin{itemize}
+  \item steps: $\beta^*$ (\code{beta_mode = 'star'}), the step is a clean second order;
+  \item trajectories (square, circle): $\beta=1$ (\code{'one'}), with $\beta<1$ the joint lags behind the reference.
+\end{itemize}
+\code{beta_mode} is used by the search to check the requirements and is the value written to Simulink.
+\end{framed}
+
+\newpage
+%==========================================================================================
+\section*{design\_pp.m}
+
+\begin{tr}
+\row{\step{1. settings}\dd poles (\code{wn}, \code{zeta}, \code{lambda}), \code{beta_mode}, \code{do_search},
+     observer (\code{obs_factor}, \code{obs_max}), \code{Td}, requirements in \code{my_req}}
+\row{\step{2. [mot, req] = pp_setup()}}
+\begin{tr}
+  \row{\utl{pp_setup}\dd writes every \emph{default} requirement and setting into \code{req}}
+  \begin{tr}
+    \row{\loc{read_pid_tune}\dd \mat{run('.../pid_tune.m')}: PID gains of both motors (comparison only)}
+    \row{\loc{read_parameters}\dd \mat{run('.../parameters.m')}: \code{k_xxxx_plant}, \code{tau_xxxx_plant}}
+    \row{\loc{make_motor}\dd called twice, motor 3165 and 3166}
+    \begin{tr}
+      \row{\mat{ss}\dd $A,B,C,G$ of the motor; $A_i,B_i$ with the integral state}
+      \row{\mat{eig}\dd PID poles $=\mathrm{eig}(A_i-B_i[K_p\ K_d\ {-K_i}])$}
+    \end{tr}
+  \end{tr}
+  \row{\dd the fields of \code{my_req} replace the defaults (loop over \mat{fieldnames})}
+\end{tr}
+\row{\step{3. from_pid(mot(1).p_pid)}\dd only if \code{start_from_pid = true}: PID poles $\to$ \code{wn, zeta, alpha}}
+\row{\step{4. x = pp_search(@poles_A, [wn zeta alpha], beta_mode, mot, req)}\dd only if \code{do_search = true}}
+\begin{tr}
+  \row{\loc{poles_A}(start)\dd start poles, the distance is measured from them}
+  \row{\lp{repeat up to 4 times:} \mat{fminsearch}\dd each try of new parameters calls:}
+  \begin{tr}
+    \row{\loc{search_cost}\dd local function of \code{pp_search}}
+    \begin{tr}
+      \row{\loc{poles_A}(exp(y))\dd parameters $\to$ 3 poles}
+      \row{\lp{for each motor (3165, 3166):}}
+      \begin{tr}
+        \row{\utl{pp_gains}(m, p, req)}
+        \begin{tr}
+          \row{\mat{acker(Ai, Bi, p)}\dd $k_1,k_2,k_i$}
+          \row{\mat{poly(p)}\dd $a_1,a_0\to\beta^*$}
+          \row{\mat{acker(A', C', p_obs)}\dd observer gain $L$ (poles: \code{obs_factor}, \code{obs_max})}
+        \end{tr}
+        \row{\loc{beta_number}\dd \code{'star'} $\to\beta^*$, \code{'one'} $\to 1$}
+        \row{\utl{closed_loop}(m, req, g, beta)}
+        \begin{tr}
+          \row{\loc{pp_controller}\dd controller block: observer + feedback + integral}
+          \row{\mat{InputDelay}, \mat{sumblk}, \mat{connect}\dd delay $T_d$, load $d$, closed loop}
+          \row{\mat{step}\dd step of $R$ degrees and load step $\to$ overshoot, settling, peak voltage}
+          \row{\mat{margin}, \mat{freqresp}\dd phase margin, $M_s$, chatter}
+        \end{tr}
+        \row{\utl{pp_check}(r, p, req)\dd 7 violations $v$ ($v\le0$: met)}
+      \end{tr}
+      \row{\dd keep the worst motor; $J$ = distance + $w\cdot$penalty}
+    \end{tr}
+  \end{tr}
+  \row{\dd stop when every $v\le0.001$; return \code{x = [wn zeta alpha]}}
+\end{tr}
+\row{\loc{poles_A}([wn zeta alpha])\dd the final poles}
+\row{\step{5a. pp_report(mot, req, p, beta_mode, 'Design PP', show_plots)}}
+\begin{tr}
+  \row{\lp{for each motor:}}
+  \begin{tr}
+    \row{\utl{pp_gains}\dd gains of this motor}
+    \row{\utl{closed_loop} $\times3$\dd PID (local \loc{pid_controller}), $\beta^*$, $\beta=1$}
+    \row{\utl{pp_check} $\times3$\dd values and violations}
+    \row{\mat{fprintf}\dd the table (\code{*} = not met, \code{!} = at the limit), observer poles}
+    \row{\loc{plot_steps}\dd only if \code{show_plots}: poles, angle, voltage}
+  \end{tr}
+\end{tr}
+\row{\step{5b. pp_simulink(mot, req, p, beta_mode)}}
+\begin{tr}
+  \row{\mat{run('parameters.m')} in the base workspace\dd plant of the simulation}
+  \row{\lp{for each motor:}}
+  \begin{tr}
+    \row{\utl{pp_gains}\dd gains, observer and $\beta$ of this motor}
+    \row{\mat{assignin('base', ...)}\dd \code{Kx_, Ki_, Kaw_, A_obs_, B_obs_, beta_, lamf_}, PID gains}
+    \row{\mat{assignin}\dd \code{k_xxxx_load, tau_xxxx_load} = controller model (read by the feedforward blocks)}
+  \end{tr}
+  \row{\mat{assignin}\dd \code{Vmax}}
+\end{tr}
+\end{tr}
+
+\newpage
+%==========================================================================================
+\section*{tools/observer\_study.m}
+Same design as \code{design_pp.m}, but for many designs and \emph{without} the search (each design keeps its poles, so
+the comparison changes one thing at a time). Each design is also simulated.
+
+\begin{tr}
+\row{\step{1. settings}\dd lists \code{wn_list}, \code{zeta_list}, \code{lambda_list}, \code{obs_list};
+     \code{plant_err}; requirements in \code{my_req} (as in \code{design_pp.m})}
+\row{\step{2. list of designs}\dd \mat{ndgrid}: every combination of the lists; \mat{load_system(Model_pp_obs)}}
+\row{\step{3. report header}\dd the requirements and settings, copied from section 1}
+\row{\step{4.} \lp{for each design:}}
+\begin{tr}
+  \row{\utl{pp_setup}\dd motors and defaults, then \code{my_req} and \code{obs_factor} of this design}
+  \row{\loc{poles_A}(wn, zeta, lambda)\dd the three poles}
+  \row{\lp{for each motor:}}
+  \begin{tr}
+    \row{\utl{pp_gains}, \utl{closed_loop}, \utl{pp_check}\dd as in \code{design_pp.m}}
+  \end{tr}
+  \row{\mat{sprintf}\dd one line per requirement: limit, motor 3165, motor 3166, \code{*} = not met}
+  \row{\loc{wrong_plant}\dd only if \code{plant_err} is not zero: $M_s$ and PM with $k,\tau$ changed}
+  \row{\utl{pp_simulink}\dd variables of this design}
+  \row{\lp{for each row of plant\_err:}}
+  \begin{tr}
+    \row{\mat{assignin}\dd \code{k_xxxx_plant}, \code{tau_xxxx_plant} of the simulated motor}
+    \row{\code{run_and_save(model)}\dd simulation, saved in \code{data/sim/Model_pp_obs_<date>_<time>.mat}}
+  \end{tr}
+\end{tr}
+\row{\step{5. summary}\dd one line per design (all met / which requirement fails) and the \texttt{runs = \{...\}} block
+     for \code{validate_controllers.m}; everything written to \code{data/sim/observer_study_<date>_<time>.txt}}
+\end{tr}
+
+%==========================================================================================
+\section*{The other tools (short)}
+\begin{itemize}
+  \item \code{design_B.m}: same structure as \code{design_pp.m}, but the pattern is three real poles
+        ($-\lambda_1,-\lambda_2,-\lambda_3$) moved one by one by \code{pp_search} (local \loc{poles_B}). No oscillating
+        mode, slower rise; kept for comparison.
+  \item \code{check_design.m}: no search. Poles given as $\omega_n,\zeta,\alpha$ or written by hand per motor; it checks
+        that they are stable, then calls \code{pp_report} and \code{pp_simulink}.
+  \item \code{tune_poles.m}: two windows with sliders for $\omega_n,\zeta,\alpha$ (optionally the integral pole locked),
+        live step, voltage, load step and Bode of both motors, requirement table, button to write to Simulink. Uses
+        \code{pp_setup}, \code{pp_gains}, \code{closed_loop}, \code{pp_check}, \code{pp_simulink}.
+  \item \code{explore_poles.m}: drag the poles of one motor on the pole map (or type them) and see the same plots and
+        table live. Uses \code{pp_setup}, \code{pp_gains}, \code{closed_loop}, \code{pp_check}.
+\end{itemize}
+
+%==========================================================================================
+\section*{Who calls whom (summary)}
+{\small
+\begin{tabularx}{\linewidth}{@{}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+function & called by & calls \\
+\midrule
+\code{pp_setup} & design\_pp, observer\_study, design\_B, check\_design, tune\_poles, explore\_poles &
+  read\_pid\_tune (pid\_tune.m), read\_parameters (parameters.m), make\_motor \\
+\code{pp_search} & design\_pp, design\_B & poles\_A / poles\_B, search\_cost, pp\_gains, closed\_loop, pp\_check \\
+\code{pp_gains} & pp\_search, pp\_report, pp\_simulink, observer\_study, tune\_poles, explore\_poles & acker, poly \\
+\code{closed_loop} & pp\_search, pp\_report, observer\_study, tune\_poles, explore\_poles &
+  pp\_controller or pid\_controller, connect, step, margin, freqresp \\
+\code{pp_check} & pp\_search, pp\_report, observer\_study, tune\_poles, explore\_poles & --- \\
+\code{pp_report} & design\_pp, design\_B, check\_design & pp\_gains, closed\_loop, pp\_check, plot\_steps \\
+\code{pp_simulink} & design\_pp, observer\_study, design\_B, check\_design, tune\_poles & parameters.m, pp\_gains, assignin \\
+\bottomrule
+\end{tabularx}}
+
+\end{document}

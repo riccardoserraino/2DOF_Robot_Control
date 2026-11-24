@@ -18,12 +18,8 @@ addpath(fullfile(this, 'utils'));               % pp_setup, pp_search, pp_gains,
 
 %% 1. Settings (the only lines to change)
 % --- 1a. poles ---
-% options compared in tools/observer_study.m (see the guide, results section):
-%   chosen  : wn 35, zeta 0.9,   lambda 11, observer 6x
-%   smoother: wn 30, zeta 0.9,   lambda 10, observer 6x
-%   faster  : wn 37, zeta 0.999, lambda 10, observer 6x
-wn     = 39;                    % [rad/s] higher = less error, but more noise and less robust
-zeta   = 0.9;                   % [-]     0.8-0.999, higher = less ringing at the corners
+wn     = 35;                    % [rad/s] higher = less error, but more noise and less robust
+zeta   = 0.999;                   % [-]     0.8-0.999, higher = less ringing at the corners
 lambda = 11;                    % [rad/s] integral action: removes friction errors in ~4/lambda s
 alpha  = lambda/(zeta*wn);      % (internal) real pole written as alpha*zeta*wn
 beta_mode = 'one';              % 'one' = trajectories, 'star' = steps
@@ -34,7 +30,7 @@ show_plots = false;             % true: step plots of both motors
 % --- 1b. observer and sample time ---
 Ts = 0.002;                             % [s] sample time of QUARC
 my_req.Ts         = Ts;
-my_req.obs_factor = [6; 6];             % [-] observer speed / fastest pole (textbook 2-6)
+my_req.obs_factor = [4; 4];             % [-] observer speed / fastest pole (textbook 2-6)
 my_req.obs_max    = [0.5; 0.6]/Ts;      % [rad/s] cap: faster is not reliable with Ts = 2 ms
 my_req.Td         = 0.5*Ts + 0.0035;    % [s] delay in the loop: ZOH (Ts/2) + input delay
 
@@ -42,7 +38,7 @@ my_req.Td         = 0.5*Ts + 0.0035;    % [s] delay in the loop: ZOH (Ts/2) + in
 %     of utils/pp_setup.m; Inf (0 for PM_min and lam_min) switches one off ---
 my_req.Vmax    = 6;                     % [V]     amplifier saturation on a 3 deg step
 my_req.PM_min  = 45;                    % [deg]   phase margin, computed with the delay Td
-my_req.chatter = 0.275;                 % [V]     voltage jump caused by one encoder count at high
+my_req.chatter = 0.25;                 % [V]     voltage jump caused by one encoder count at high
                                         %         frequency: limits vibrations (see the guide)
 my_req.lam_min = 10;                    % [rad/s] slowest pole: integral fast enough for the corners
 

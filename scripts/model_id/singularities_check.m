@@ -94,6 +94,34 @@ X_parallel = map_parallel_midpoint(Q_parallel, l);
 alpha = linspace(0, 2*pi, 500);
 X_degenerate = [l + l*cos(alpha(:)), l*sin(alpha(:))];
 
+%% 5b. Safe joint margin, valid for BOTH joints at the same time
+% Largest square around home  |phi| <= q_safe  and  |theta| <= q_safe  that contains no
+% singularity: q_safe is the smallest distance of a singular configuration from home,
+% measured as max(|phi|, |theta|) (both joints can be at their limit together).
+% Inside the square the forward kinematics exists and both Jacobians are invertible.
+sets  = {Q_left, Q_right, Q_parallel, q_degenerate};
+types = {'serial left', 'serial right', 'parallel (B,C,D aligned)', 'degenerate (B = D)'};
+d     = inf(1, 4);                  % [rad] distance of each type from home
+q_at  = nan(4, 2);                  % [rad] nearest singular configuration of each type
+for k = 1:4
+    Q = sets{k};
+    Q = Q(all(isfinite(Q), 2), :);  % drop the NaN separators
+    if isempty(Q), continue; end
+    [d(k), j]  = min(max(abs(Q), [], 2));
+    q_at(k, :) = Q(j, :);
+end
+[q_safe, k_min] = min(d);
+
+q_lim = 20;                         % [deg] joint limit used for the trajectories
+fprintf('SAFE JOINT MARGIN (both joints together, from home)\n');
+fprintf('%-26s %10s %22s\n', 'singularity', 'margin', 'nearest [phi, theta]');
+for k = 1:4
+    fprintf('%-26s %7.1f deg   [%6.1f, %6.1f] deg\n', types{k}, rad2deg(d(k)), rad2deg(q_at(k, :)));
+end
+fprintf('=> |phi| and |theta| must stay below %.1f deg (limited by: %s)\n', ...
+        rad2deg(q_safe), types{k_min});
+fprintf('   joint limit %g deg: margin left %.1f deg\n', q_lim, rad2deg(q_safe) - q_lim);
+
 %% 6. Joint-space plot
 figure('Name', 'Singularities - Joint Space');
 hold on; grid on;
@@ -116,6 +144,10 @@ plot(q_degenerate(1), q_degenerate(2), ...
 
 plot(0, 0, 'ko', 'MarkerFaceColor', 'y', ...
     'DisplayName', 'Home');
+
+plot(q_safe*[-1 1 1 -1 -1], q_safe*[-1 -1 1 1 -1], ...
+    'k--', 'LineWidth', 1.5, ...
+    'DisplayName', sprintf('Safe square: \\pm%.1f deg', rad2deg(q_safe)));
 
 xlabel('\phi [rad]');
 ylabel('\theta [rad]');

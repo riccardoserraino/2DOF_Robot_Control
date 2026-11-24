@@ -1,0 +1,410 @@
+Report: pp_tune_20261124_202544.txt
+Tolerances (% of the limit): peak V -20, PM -5, Ms 0, chatter 0, slowest pole 0, wc 5
+
+=========== ACCEPTED (requirements met within the tolerances), best first ===========
+design                       score     Ms  chat. |    PM    Ms  wc [rad/s] |   joint [deg]      tip [mm]  contour [mm] HF [V]
+                                      use    use | worst worst   min / max |   3165 / 3166     RMS / max     RMS / max       
+wn24 z1.1 i0.5 obs3           1.01    95%    91% |  50.9  1.52  26.7/ 27.1 |  0.196/ 0.223  0.646/ 4.309  0.416/ 3.198  0.055
+wn20 z1.1 i0.5 obs5           1.01    85%    96% |  57.7  1.37  23.6/ 24.0 |  0.201/ 0.222  0.650/ 4.404  0.423/ 3.129  0.056
+wn20 z1.2 i0.7 obs3           1.01    93%    87% |  52.2  1.50  25.9/ 26.3 |  0.199/ 0.226  0.655/ 4.404  0.422/ 3.157  0.055
+wn20 z1.1 i0.7 obs4           1.02    91%    88% |  52.4  1.46  25.2/ 25.6 |  0.201/ 0.226  0.657/ 4.483  0.426/ 3.202  0.055
+wn24 z1 i0.5 obs5             1.03    94%    88% |  50.3  1.50  26.0/ 26.4 |  0.201/ 0.226  0.657/ 4.483  0.424/ 3.318  0.054
+wn20 z1.2 i0.5 obs3           1.06    89%    76% |  55.8  1.43  22.8/ 23.2 |  0.213/ 0.239  0.698/ 4.641  0.447/ 3.129  0.054
+wn20 z1.1 i0.5 obs4           1.06    87%    76% |  55.7  1.40  22.3/ 22.7 |  0.213/ 0.238  0.695/ 4.741  0.449/ 3.207  0.054
+wn24 z0.9 i0.5 obs5           1.08    94%    78% |  48.6  1.50  24.7/ 25.1 |  0.211/ 0.236  0.688/ 4.824  0.447/ 3.438  0.054
+wn24 z1 i0.5 obs4             1.10    96%    70% |  48.5  1.54  24.3/ 24.6 |  0.216/ 0.246  0.713/ 4.828  0.461/ 3.418  0.054
+wn20 z1.1 i0.7 obs3           1.11    94%    66% |  49.9  1.51  23.1/ 23.4 |  0.222/ 0.251  0.730/ 4.915  0.472/ 3.329  0.054
+wn20 z1 i0.7 obs5             1.14    93%    63% |  49.3  1.49  22.3/ 22.6 |  0.227/ 0.254  0.741/ 5.082  0.482/ 3.400  0.053
+wn20 z1.1 i0.5 obs3           1.16    90%    57% |  53.1  1.44  20.5/ 20.9 |  0.235/ 0.264  0.772/ 5.084  0.496/ 3.306  0.054
+wn20 z1 i0.5 obs5             1.17    90%    54% |  52.2  1.43  20.0/ 20.3 |  0.238/ 0.266  0.777/ 5.258  0.505/ 3.356  0.053
+wn20 z0.9 i0.7 obs5           1.19    94%    55% |  47.6  1.50  21.1/ 21.4 |  0.239/ 0.266  0.776/ 5.343  0.509/ 3.513  0.053
+wn20 z1 i0.7 obs4             1.22    96%    51% |  47.4  1.54  20.9/ 21.2 |  0.244/ 0.276  0.803/ 5.402  0.522/ 3.513  0.053
+wn20 z1 i0.5 obs4             1.24    92%    44% |  50.2  1.48  18.8/ 19.1 |  0.254/ 0.288  0.839/ 5.473  0.541/ 3.346  0.053
+wn20 z1 i0.5 obs3             1.35    96%    32% |  47.8  1.53  17.2/ 17.4 |  0.284/ 0.324  0.943/ 5.812  0.595/ 3.314  0.054
+
+=========== REJECTED (excess over the limit; PM, Ms, wc of the worst motor) ===========
+wn20 z0.8 i0.3 obs3          PM  48.6  Ms 1.53  wc  14.9- 15.1 | slowest +52.0%
+wn24 z0.8 i0.3 obs3          PM  47.4  Ms 1.57  wc  19.0- 19.3 | slowest +42.4%
+wn28 z0.8 i0.3 obs3          PM  45.6  Ms 1.62  wc  23.4- 23.7 | phase -1.4%, Ms +1.4%, slowest +32.8%
+wn32 z0.8 i0.3 obs3          PM  43.7  Ms 1.68  wc  28.0- 28.3 | phase +2.9%, Ms +5.2%, slowest +23.2%
+wn35 z0.8 i0.3 obs3          PM  42.2  Ms 1.74  wc  31.5- 31.8 | phase +6.3%, Ms +8.5%, slowest +16.0%
+wn37 z0.8 i0.3 obs3          PM  41.2  Ms 1.77  wc  33.9- 34.2 | phase +8.5%, Ms +10.8%, chatter +11.0%, slowest +11.2%
+wn20 z0.9 i0.3 obs3          PM  50.7  Ms 1.48  wc  14.9- 15.1 | slowest +46.0%
+wn24 z0.9 i0.3 obs3          PM  49.5  Ms 1.52  wc  19.1- 19.4 | slowest +35.2%
+wn28 z0.9 i0.3 obs3          PM  47.8  Ms 1.58  wc  23.7- 24.0 | slowest +24.4%
+wn32 z0.9 i0.3 obs3          PM  45.7  Ms 1.64  wc  28.4- 28.8 | phase -1.6%, Ms +2.7%, slowest +13.6%
+wn35 z0.9 i0.3 obs3          PM  44.2  Ms 1.70  wc  32.0- 32.4 | phase +1.9%, Ms +6.0%, chatter +6.0%, slowest +5.5%
+wn37 z0.9 i0.3 obs3          PM  43.1  Ms 1.73  wc  34.5- 34.9 | phase +4.2%, Ms +8.3%, chatter +21.0%, slowest +0.1%
+wn20 z1 i0.3 obs3            PM  52.4  Ms 1.45  wc  15.0- 15.2 | slowest +40.0%
+wn24 z1 i0.3 obs3            PM  51.3  Ms 1.50  wc  19.3- 19.6 | slowest +28.0%
+wn28 z1 i0.3 obs3            PM  49.5  Ms 1.55  wc  24.0- 24.4 | slowest +16.0%
+wn32 z1 i0.3 obs3            PM  47.4  Ms 1.62  wc  28.9- 29.3 | Ms +1.2%, slowest +4.0%
+wn35 z1 i0.3 obs3            PM  45.7  Ms 1.67  wc  32.7- 33.1 | phase -1.6%, Ms +4.5%, chatter +15.0%
+wn37 z1 i0.3 obs3            PM  44.6  Ms 1.71  wc  35.2- 35.6 | phase +0.9%, Ms +6.7%, chatter +31.0%
+wn20 z1.1 i0.3 obs3          PM  58.2  Ms 1.37  wc  17.5- 17.9 | slowest +34.0%
+wn24 z1.1 i0.3 obs3          PM  56.5  Ms 1.43  wc  23.1- 23.6 | slowest +20.8%
+wn28 z1.1 i0.3 obs3          PM  54.0  Ms 1.49  wc  29.1- 29.6 | chatter +14.0%, slowest +7.6%
+wn32 z1.1 i0.3 obs3          PM  51.2  Ms 1.56  wc  35.2- 35.7 | chatter +59.0%
+wn35 z1.1 i0.3 obs3          PM  49.2  Ms 1.62  wc  39.8- 40.4 | Ms +1.3%, chatter +98.0%
+wn37 z1.1 i0.3 obs3          PM  47.8  Ms 1.66  wc  42.9- 43.5 | Ms +3.8%, chatter +126.0%, crossover +8.6%
+wn20 z1.2 i0.3 obs3          PM  61.6  Ms 1.35  wc  19.2- 19.6 | slowest +28.0%
+wn24 z1.2 i0.3 obs3          PM  59.2  Ms 1.42  wc  25.6- 26.1 | chatter +3.0%, slowest +13.6%
+wn28 z1.2 i0.3 obs3          PM  56.1  Ms 1.49  wc  32.4- 32.9 | chatter +51.0%
+wn32 z1.2 i0.3 obs3          PM  53.0  Ms 1.56  wc  39.2- 39.8 | chatter +110.0%
+wn35 z1.2 i0.3 obs3          PM  50.7  Ms 1.62  wc  44.4- 45.0 | Ms +1.4%, chatter +160.0%, crossover +12.4%
+wn37 z1.2 i0.3 obs3          PM  49.2  Ms 1.66  wc  47.8- 48.4 | Ms +3.9%, chatter +196.0%, crossover +21.0%
+wn20 z0.8 i0.5 obs3          PM  44.2  Ms 1.61  wc  16.5- 16.7 | phase +1.9%, Ms +0.6%, slowest +20.0%
+wn24 z0.8 i0.5 obs3          PM  42.9  Ms 1.66  wc  21.0- 21.2 | phase +4.8%, Ms +3.6%, slowest +4.0%
+wn28 z0.8 i0.5 obs3          PM  41.2  Ms 1.72  wc  25.7- 26.0 | phase +8.5%, Ms +7.6%
+wn32 z0.8 i0.5 obs3          PM  39.3  Ms 1.80  wc  30.5- 30.9 | phase +12.7%, Ms +12.3%
+wn35 z0.8 i0.5 obs3          PM  37.8  Ms 1.86  wc  34.2- 34.6 | phase +16.0%, Ms +16.2%, chatter +11.0%
+wn37 z0.8 i0.5 obs3          PM  36.8  Ms 1.90  wc  36.7- 37.1 | phase +18.2%, Ms +19.0%, chatter +27.0%
+wn20 z0.9 i0.5 obs3          PM  46.1  Ms 1.56  wc  16.8- 17.0 | phase -2.5%, slowest +10.0%
+wn24 z0.9 i0.5 obs3          PM  44.7  Ms 1.62  wc  21.5- 21.7 | phase +0.6%, Ms +1.1%
+wn28 z0.9 i0.5 obs3          PM  42.9  Ms 1.69  wc  26.4- 26.7 | phase +4.6%, Ms +5.3%
+wn32 z0.9 i0.5 obs3          PM  40.9  Ms 1.76  wc  31.4- 31.8 | phase +9.1%, Ms +10.1%
+wn35 z0.9 i0.5 obs3          PM  39.4  Ms 1.82  wc  35.3- 35.7 | phase +12.6%, Ms +14.1%, chatter +22.0%
+wn37 z0.9 i0.5 obs3          PM  38.3  Ms 1.87  wc  37.9- 38.2 | phase +14.9%, Ms +16.8%, chatter +39.0%
+wn24 z1 i0.5 obs3            PM  46.3  Ms 1.59  wc  22.0- 22.3 | phase -2.9%
+wn28 z1 i0.5 obs3            PM  44.3  Ms 1.66  wc  27.2- 27.5 | phase +1.5%, Ms +4.0%
+wn32 z1 i0.5 obs3            PM  42.2  Ms 1.74  wc  32.4- 32.8 | phase +6.3%, Ms +8.9%, chatter +7.0%
+wn35 z1 i0.5 obs3            PM  40.5  Ms 1.81  wc  36.5- 36.8 | phase +10.0%, Ms +12.9%, chatter +33.0%
+wn37 z1 i0.5 obs3            PM  39.4  Ms 1.85  wc  39.1- 39.5 | phase +12.4%, Ms +15.7%, chatter +52.0%
+wn28 z1.1 i0.5 obs3          PM  48.2  Ms 1.60  wc  33.2- 33.6 | chatter +33.0%
+wn32 z1.1 i0.5 obs3          PM  45.4  Ms 1.68  wc  39.7- 40.2 | phase -1.0%, Ms +5.2%, chatter +84.0%
+wn35 z1.1 i0.5 obs3          PM  43.4  Ms 1.75  wc  44.7- 45.2 | phase +3.5%, Ms +9.6%, chatter +127.0%, crossover +12.9%
+wn37 z1.1 i0.5 obs3          PM  42.1  Ms 1.80  wc  48.0- 48.5 | peak -15.8%, phase +6.5%, Ms +12.6%, chatter +159.0%, crossover +21.2%
+wn24 z1.2 i0.5 obs3          PM  53.0  Ms 1.51  wc  29.9- 30.4 | chatter +20.0%
+wn28 z1.2 i0.5 obs3          PM  49.8  Ms 1.59  wc  37.2- 37.7 | chatter +76.0%
+wn32 z1.2 i0.5 obs3          PM  46.7  Ms 1.69  wc  44.5- 45.0 | phase -3.7%, Ms +5.3%, chatter +142.0%, crossover +12.6%
+wn35 z1.2 i0.5 obs3          PM  44.4  Ms 1.76  wc  50.0- 50.6 | peak -16.8%, phase +1.3%, Ms +9.9%, chatter +199.0%, crossover +26.4%
+wn37 z1.2 i0.5 obs3          PM  43.0  Ms 1.81  wc  53.7- 54.2 | peak -7.0%, phase +4.5%, Ms +13.3%, chatter +240.0%, crossover +35.6%
+wn20 z0.8 i0.7 obs3          PM  41.6  Ms 1.67  wc  17.9- 18.1 | phase +7.6%, Ms +4.4%
+wn24 z0.8 i0.7 obs3          PM  40.2  Ms 1.73  wc  22.7- 22.9 | phase +10.8%, Ms +8.1%
+wn28 z0.8 i0.7 obs3          PM  38.4  Ms 1.80  wc  27.7- 27.9 | phase +14.7%, Ms +12.7%
+wn32 z0.8 i0.7 obs3          PM  36.5  Ms 1.89  wc  32.8- 33.1 | phase +19.0%, Ms +18.2%
+wn35 z0.8 i0.7 obs3          PM  35.0  Ms 1.96  wc  36.7- 37.0 | phase +22.2%, Ms +22.7%, chatter +24.0%
+wn37 z0.8 i0.7 obs3          PM  34.0  Ms 2.02  wc  39.3- 39.6 | phase +24.4%, Ms +26.0%, chatter +42.0%
+wn20 z0.9 i0.7 obs3          PM  43.5  Ms 1.63  wc  18.4- 18.7 | phase +3.3%, Ms +1.7%
+wn24 z0.9 i0.7 obs3          PM  41.9  Ms 1.69  wc  23.4- 23.7 | phase +6.8%, Ms +5.7%
+wn28 z0.9 i0.7 obs3          PM  40.0  Ms 1.77  wc  28.7- 29.0 | phase +11.1%, Ms +10.7%
+wn32 z0.9 i0.7 obs3          PM  37.9  Ms 1.86  wc  34.1- 34.4 | phase +15.8%, Ms +16.3%, chatter +11.0%
+wn35 z0.9 i0.7 obs3          PM  36.3  Ms 1.94  wc  38.1- 38.5 | phase +19.3%, Ms +20.9%, chatter +37.0%
+wn37 z0.9 i0.7 obs3          PM  35.2  Ms 1.99  wc  40.9- 41.2 | peak -18.7%, phase +21.7%, Ms +24.2%, chatter +57.0%
+wn20 z1 i0.7 obs3            PM  45.1  Ms 1.60  wc  19.0- 19.3 | phase -0.3%
+wn24 z1 i0.7 obs3            PM  43.4  Ms 1.67  wc  24.3- 24.6 | phase +3.6%, Ms +4.4%
+wn28 z1 i0.7 obs3            PM  41.2  Ms 1.75  wc  29.8- 30.1 | phase +8.4%, Ms +9.6%
+wn32 z1 i0.7 obs3            PM  38.9  Ms 1.85  wc  35.4- 35.8 | phase +13.5%, Ms +15.4%, chatter +22.0%
+wn35 z1 i0.7 obs3            PM  37.2  Ms 1.92  wc  39.7- 40.1 | peak -18.2%, phase +17.3%, Ms +20.2%, chatter +51.0%
+wn37 z1 i0.7 obs3            PM  36.1  Ms 1.98  wc  42.5- 42.9 | peak -8.5%, phase +19.8%, Ms +23.6%, chatter +71.0%, crossover +7.3%
+wn24 z1.1 i0.7 obs3          PM  47.4  Ms 1.59  wc  29.8- 30.2 | chatter +4.0%
+wn28 z1.1 i0.7 obs3          PM  44.5  Ms 1.69  wc  36.7- 37.1 | phase +1.1%, Ms +5.6%, chatter +51.0%
+wn32 z1.1 i0.7 obs3          PM  41.7  Ms 1.79  wc  43.7- 44.1 | phase +7.4%, Ms +12.0%, chatter +108.0%, crossover +10.3%
+wn35 z1.1 i0.7 obs3          PM  39.6  Ms 1.88  wc  48.9- 49.4 | peak -8.1%, phase +12.0%, Ms +17.2%, chatter +156.0%, crossover +23.5%
+wn37 z1.1 i0.7 obs3          PM  38.2  Ms 1.94  wc  52.5- 52.9 | peak +2.7%, phase +15.0%, Ms +20.9%, chatter +192.0%, crossover +32.3%
+wn24 z1.2 i0.7 obs3          PM  49.0  Ms 1.59  wc  33.5- 34.0 | chatter +37.0%
+wn28 z1.2 i0.7 obs3          PM  45.7  Ms 1.69  wc  41.3- 41.8 | phase -1.5%, Ms +5.6%, chatter +99.0%
+wn32 z1.2 i0.7 obs3          PM  42.5  Ms 1.80  wc  49.1- 49.6 | peak -14.0%, phase +5.6%, Ms +12.6%, chatter +173.0%, crossover +24.0%
+wn35 z1.2 i0.7 obs3          PM  40.2  Ms 1.89  wc  55.0- 55.5 | peak +2.8%, phase +10.7%, Ms +18.2%, chatter +236.0%, crossover +38.7%
+wn37 z1.2 i0.7 obs3          PM  38.7  Ms 1.96  wc  58.9- 59.4 | peak +14.9%, phase +14.0%, Ms +22.2%, chatter +282.0%, crossover +48.5%
+wn20 z0.8 i1 obs3            PM  39.4  Ms 1.74  wc  19.7- 19.9 | phase +12.4%, Ms +8.4%
+wn24 z0.8 i1 obs3            PM  37.8  Ms 1.81  wc  24.8- 25.1 | phase +16.0%, Ms +13.0%
+wn28 z0.8 i1 obs3            PM  35.9  Ms 1.90  wc  30.2- 30.5 | phase +20.2%, Ms +18.6%
+wn32 z0.8 i1 obs3            PM  33.9  Ms 2.00  wc  35.7- 36.0 | phase +24.7%, Ms +25.2%, chatter +16.0%
+wn35 z0.8 i1 obs3            PM  32.4  Ms 2.09  wc  39.8- 40.2 | phase +28.1%, Ms +30.6%, chatter +43.0%
+wn37 z0.8 i1 obs3            PM  31.3  Ms 2.15  wc  42.6- 42.9 | peak -13.1%, phase +30.4%, Ms +34.6%, chatter +63.0%, crossover +7.4%
+wn20 z0.9 i1 obs3            PM  41.4  Ms 1.69  wc  20.5- 20.7 | phase +8.1%, Ms +5.9%
+wn24 z0.9 i1 obs3            PM  39.5  Ms 1.77  wc  25.9- 26.2 | phase +12.2%, Ms +10.9%
+wn28 z0.9 i1 obs3            PM  37.3  Ms 1.87  wc  31.6- 31.9 | phase +17.0%, Ms +16.9%
+wn32 z0.9 i1 obs3            PM  35.1  Ms 1.98  wc  37.4- 37.7 | phase +22.0%, Ms +23.7%, chatter +29.0%
+wn35 z0.9 i1 obs3            PM  33.5  Ms 2.07  wc  41.8- 42.1 | peak -10.7%, phase +25.7%, Ms +29.3%, chatter +59.0%, crossover +5.3%
+wn37 z0.9 i1 obs3            PM  32.4  Ms 2.13  wc  44.7- 45.1 | peak -0.2%, phase +28.1%, Ms +33.3%, chatter +81.0%, crossover +12.6%
+wn20 z1 i1 obs3              PM  42.9  Ms 1.67  wc  21.3- 21.6 | phase +4.6%, Ms +4.4%
+wn24 z1 i1 obs3              PM  40.8  Ms 1.76  wc  27.1- 27.4 | phase +9.4%, Ms +9.9%
+wn28 z1 i1 obs3              PM  38.4  Ms 1.86  wc  33.1- 33.4 | phase +14.7%, Ms +16.2%, chatter +4.0%
+wn32 z1 i1 obs3              PM  36.0  Ms 1.97  wc  39.2- 39.5 | peak -14.5%, phase +20.1%, Ms +23.2%, chatter +42.0%
+wn35 z1 i1 obs3              PM  34.2  Ms 2.06  wc  43.8- 44.1 | peak +2.3%, phase +24.0%, Ms +29.1%, chatter +75.0%, crossover +10.3%
+wn37 z1 i1 obs3              PM  33.0  Ms 2.13  wc  46.8- 47.2 | peak +14.3%, phase +26.6%, Ms +33.2%, chatter +99.0%, crossover +18.0%
+wn20 z1.1 i1 obs3            PM  47.0  Ms 1.59  wc  26.3- 26.6 | phase -4.4%
+wn24 z1.1 i1 obs3            PM  44.0  Ms 1.69  wc  33.6- 34.1 | phase +2.3%, Ms +5.9%, chatter +22.0%
+wn28 z1.1 i1 obs3            PM  40.9  Ms 1.81  wc  41.2- 41.6 | phase +9.2%, Ms +13.0%, chatter +77.0%
+wn32 z1.1 i1 obs3            PM  37.9  Ms 1.94  wc  48.7- 49.2 | peak -2.5%, phase +15.8%, Ms +21.0%, chatter +142.0%, crossover +22.9%
+wn35 z1.1 i1 obs3            PM  35.7  Ms 2.04  wc  54.4- 54.8 | peak +16.6%, phase +20.6%, Ms +27.6%, chatter +198.0%, crossover +37.1%
+wn37 z1.1 i1 obs3            PM  34.3  Ms 2.12  wc  58.2- 58.6 | peak +30.3%, phase +23.7%, Ms +32.2%, chatter +238.0%, crossover +46.6%
+wn20 z1.2 i1 obs3            PM  48.6  Ms 1.58  wc  29.7- 30.2 | chatter +4.0%
+wn24 z1.2 i1 obs3            PM  45.0  Ms 1.70  wc  38.1- 38.5 | phase -0.0%, Ms +5.9%, chatter +62.0%
+wn28 z1.2 i1 obs3            PM  41.5  Ms 1.82  wc  46.5- 47.0 | peak -15.3%, phase +7.7%, Ms +13.7%, chatter +133.0%, crossover +17.5%
+wn32 z1.2 i1 obs3            PM  38.2  Ms 1.96  wc  55.0- 55.5 | peak +10.6%, phase +15.1%, Ms +22.5%, chatter +218.0%, crossover +38.7%
+wn35 z1.2 i1 obs3            PM  35.8  Ms 2.08  wc  61.4- 61.8 | peak +32.3%, phase +20.4%, Ms +29.7%, chatter +290.0%, crossover +54.5%
+wn37 z1.2 i1 obs3            PM  34.3  Ms 2.16  wc  65.6- 66.0 | peak +47.9%, phase +23.7%, Ms +35.0%, chatter +342.0%, crossover +65.1%
+wn20 z0.8 i0.3 obs4          PM  50.4  Ms 1.47  wc  15.9- 16.1 | slowest +52.0%
+wn24 z0.8 i0.3 obs4          PM  49.1  Ms 1.50  wc  20.4- 20.7 | slowest +42.4%
+wn28 z0.8 i0.3 obs4          PM  47.3  Ms 1.56  wc  25.2- 25.6 | slowest +32.8%
+wn32 z0.8 i0.3 obs4          PM  45.3  Ms 1.62  wc  30.3- 30.6 | phase -0.7%, Ms +1.1%, chatter +1.0%, slowest +23.2%
+wn35 z0.8 i0.3 obs4          PM  43.7  Ms 1.67  wc  34.1- 34.5 | phase +2.8%, Ms +4.3%, chatter +26.0%, slowest +16.0%
+wn37 z0.8 i0.3 obs4          PM  42.7  Ms 1.71  wc  36.7- 37.1 | phase +5.2%, Ms +6.6%, chatter +45.0%, slowest +11.2%
+wn20 z0.9 i0.3 obs4          PM  52.8  Ms 1.42  wc  16.0- 16.3 | slowest +46.0%
+wn24 z0.9 i0.3 obs4          PM  51.6  Ms 1.47  wc  20.8- 21.1 | slowest +35.2%
+wn28 z0.9 i0.3 obs4          PM  49.6  Ms 1.53  wc  25.9- 26.3 | slowest +24.4%
+wn32 z0.9 i0.3 obs4          PM  47.4  Ms 1.59  wc  31.1- 31.6 | chatter +12.0%, slowest +13.6%
+wn35 z0.9 i0.3 obs4          PM  45.7  Ms 1.65  wc  35.2- 35.6 | phase -1.6%, Ms +2.8%, chatter +40.0%, slowest +5.5%
+wn37 z0.9 i0.3 obs4          PM  44.6  Ms 1.68  wc  37.8- 38.3 | phase +0.9%, Ms +5.1%, chatter +60.0%, slowest +0.1%
+wn20 z1 i0.3 obs4            PM  54.9  Ms 1.40  wc  16.3- 16.6 | slowest +40.0%
+wn24 z1 i0.3 obs4            PM  53.5  Ms 1.45  wc  21.3- 21.7 | slowest +28.0%
+wn28 z1 i0.3 obs4            PM  51.4  Ms 1.51  wc  26.6- 27.0 | slowest +16.0%
+wn32 z1 i0.3 obs4            PM  49.1  Ms 1.58  wc  32.1- 32.6 | chatter +24.0%, slowest +4.0%
+wn35 z1 i0.3 obs4            PM  47.2  Ms 1.64  wc  36.3- 36.8 | phase -5.0%, Ms +2.2%, chatter +54.0%
+wn37 z1 i0.3 obs4            PM  46.0  Ms 1.67  wc  39.1- 39.6 | phase -2.3%, Ms +4.6%, chatter +76.0%
+wn20 z1.1 i0.3 obs4          PM  61.0  Ms 1.33  wc  19.0- 19.4 | slowest +34.0%
+wn24 z1.1 i0.3 obs4          PM  58.9  Ms 1.39  wc  25.3- 25.8 | chatter +5.0%, slowest +20.8%
+wn28 z1.1 i0.3 obs4          PM  56.0  Ms 1.46  wc  32.0- 32.5 | chatter +55.0%, slowest +7.6%
+wn32 z1.1 i0.3 obs4          PM  53.0  Ms 1.53  wc  38.8- 39.3 | chatter +115.0%
+wn35 z1.1 i0.3 obs4          PM  50.8  Ms 1.59  wc  43.9- 44.5 | chatter +167.0%, crossover +11.1%
+wn37 z1.1 i0.3 obs4          PM  49.4  Ms 1.63  wc  47.3- 47.9 | Ms +1.9%, chatter +205.0%, crossover +19.7%
+wn20 z1.2 i0.3 obs4          PM  64.3  Ms 1.32  wc  21.0- 21.5 | slowest +28.0%
+wn24 z1.2 i0.3 obs4          PM  61.5  Ms 1.39  wc  28.2- 28.8 | chatter +40.0%, slowest +13.6%
+wn28 z1.2 i0.3 obs4          PM  58.0  Ms 1.46  wc  35.7- 36.3 | chatter +107.0%
+wn32 z1.2 i0.3 obs4          PM  54.6  Ms 1.54  wc  43.3- 43.9 | chatter +185.0%, crossover +9.8%
+wn35 z1.2 i0.3 obs4          PM  52.1  Ms 1.60  wc  48.6- 49.3 | Ms +0.1%, chatter +245.0%, crossover +23.2%
+wn37 z1.2 i0.3 obs4          PM  50.3  Ms 1.65  wc  51.9- 52.5 | Ms +2.8%, chatter +282.0%, crossover +31.3%
+wn20 z0.8 i0.5 obs4          PM  46.1  Ms 1.53  wc  17.6- 17.8 | phase -2.5%, slowest +20.0%
+wn24 z0.8 i0.5 obs4          PM  44.8  Ms 1.58  wc  22.5- 22.8 | phase +0.4%, slowest +4.0%
+wn28 z0.8 i0.5 obs4          PM  43.0  Ms 1.64  wc  27.7- 28.0 | phase +4.4%, Ms +2.7%
+wn32 z0.8 i0.5 obs4          PM  41.0  Ms 1.72  wc  33.0- 33.4 | phase +8.8%, Ms +7.4%, chatter +16.0%
+wn35 z0.8 i0.5 obs4          PM  39.5  Ms 1.78  wc  37.1- 37.4 | phase +12.2%, Ms +11.2%, chatter +44.0%
+wn37 z0.8 i0.5 obs4          PM  38.5  Ms 1.82  wc  39.8- 40.2 | phase +14.5%, Ms +13.9%, chatter +65.0%
+wn20 z0.9 i0.5 obs4          PM  48.3  Ms 1.50  wc  18.2- 18.4 | slowest +10.0%
+wn24 z0.9 i0.5 obs4          PM  46.9  Ms 1.55  wc  23.3- 23.7 | phase -4.1%
+wn28 z0.9 i0.5 obs4          PM  44.9  Ms 1.62  wc  28.8- 29.2 | phase +0.3%, Ms +1.4%
+wn32 z0.9 i0.5 obs4          PM  42.7  Ms 1.70  wc  34.4- 34.8 | phase +5.2%, Ms +6.2%, chatter +29.0%
+wn35 z0.9 i0.5 obs4          PM  41.0  Ms 1.76  wc  38.7- 39.1 | phase +8.9%, Ms +10.2%, chatter +61.0%
+wn37 z0.9 i0.5 obs4          PM  39.9  Ms 1.81  wc  41.6- 42.0 | phase +11.4%, Ms +13.0%, chatter +83.0%
+wn28 z1 i0.5 obs4            PM  46.2  Ms 1.61  wc  30.0- 30.4 | phase -2.7%, Ms +0.9%, chatter +3.0%
+wn32 z1 i0.5 obs4            PM  43.8  Ms 1.70  wc  36.0- 36.4 | phase +2.7%, Ms +6.1%, chatter +43.0%
+wn35 z1 i0.5 obs4            PM  42.0  Ms 1.76  wc  40.4- 40.9 | phase +6.7%, Ms +10.2%, chatter +77.0%
+wn37 z1 i0.5 obs4            PM  40.8  Ms 1.81  wc  43.4- 43.9 | phase +9.4%, Ms +13.1%, chatter +102.0%, crossover +9.7%
+wn24 z1.1 i0.5 obs4          PM  53.2  Ms 1.48  wc  29.2- 29.7 | chatter +22.0%
+wn28 z1.1 i0.5 obs4          PM  50.3  Ms 1.56  wc  36.4- 36.9 | chatter +79.0%
+wn32 z1.1 i0.5 obs4          PM  47.3  Ms 1.64  wc  43.7- 44.2 | Ms +2.7%, chatter +147.0%, crossover +10.5%
+wn35 z1.1 i0.5 obs4          PM  45.1  Ms 1.71  wc  49.1- 49.7 | phase -0.2%, Ms +7.1%, chatter +205.0%, crossover +24.2%
+wn37 z1.1 i0.5 obs4          PM  43.7  Ms 1.76  wc  52.8- 53.3 | peak -15.8%, phase +3.0%, Ms +10.2%, chatter +248.0%, crossover +33.3%
+wn20 z1.2 i0.5 obs4          PM  58.4  Ms 1.39  wc  24.9- 25.4 | chatter +3.0%
+wn24 z1.2 i0.5 obs4          PM  55.2  Ms 1.47  wc  32.8- 33.4 | chatter +63.0%
+wn28 z1.2 i0.5 obs4          PM  51.7  Ms 1.56  wc  40.9- 41.4 | chatter +138.0%
+wn32 z1.2 i0.5 obs4          PM  48.3  Ms 1.65  wc  49.0- 49.6 | Ms +3.3%, chatter +227.0%, crossover +23.9%
+wn35 z1.2 i0.5 obs4          PM  45.8  Ms 1.73  wc  54.7- 55.3 | peak -16.8%, phase -1.8%, Ms +8.2%, chatter +294.0%, crossover +38.2%
+wn37 z1.2 i0.5 obs4          PM  44.1  Ms 1.79  wc  58.2- 58.8 | peak -7.0%, phase +2.0%, Ms +11.7%, chatter +335.0%, crossover +46.9%
+wn20 z0.8 i0.7 obs4          PM  43.6  Ms 1.59  wc  19.2- 19.4 | phase +3.1%
+wn24 z0.8 i0.7 obs4          PM  42.2  Ms 1.65  wc  24.4- 24.7 | phase +6.3%, Ms +2.8%
+wn28 z0.8 i0.7 obs4          PM  40.3  Ms 1.72  wc  29.9- 30.2 | phase +10.5%, Ms +7.4%
+wn32 z0.8 i0.7 obs4          PM  38.3  Ms 1.80  wc  35.5- 35.9 | phase +15.0%, Ms +12.7%, chatter +30.0%
+wn35 z0.8 i0.7 obs4          PM  36.7  Ms 1.88  wc  39.8- 40.1 | phase +18.5%, Ms +17.2%, chatter +61.0%
+wn37 z0.8 i0.7 obs4          PM  35.7  Ms 1.93  wc  42.6- 43.0 | phase +20.8%, Ms +20.4%, chatter +84.0%, crossover +7.5%
+wn20 z0.9 i0.7 obs4          PM  45.7  Ms 1.55  wc  20.0- 20.2 | phase -1.6%
+wn24 z0.9 i0.7 obs4          PM  44.0  Ms 1.62  wc  25.6- 25.9 | phase +2.3%, Ms +1.4%
+wn28 z0.9 i0.7 obs4          PM  41.8  Ms 1.70  wc  31.4- 31.8 | phase +7.0%, Ms +6.4%, chatter +5.0%
+wn32 z0.9 i0.7 obs4          PM  39.6  Ms 1.79  wc  37.4- 37.7 | phase +12.1%, Ms +12.1%, chatter +46.0%
+wn35 z0.9 i0.7 obs4          PM  37.9  Ms 1.87  wc  41.9- 42.3 | phase +15.9%, Ms +16.8%, chatter +80.0%, crossover +5.6%
+wn37 z0.9 i0.7 obs4          PM  36.7  Ms 1.92  wc  44.9- 45.3 | peak -18.7%, phase +18.4%, Ms +20.1%, chatter +106.0%, crossover +13.2%
+wn24 z1 i0.7 obs4            PM  45.3  Ms 1.62  wc  26.8- 27.2 | phase -0.7%, Ms +1.0%
+wn28 z1 i0.7 obs4            PM  42.9  Ms 1.70  wc  33.0- 33.4 | phase +4.6%, Ms +6.4%, chatter +17.0%
+wn32 z1 i0.7 obs4            PM  40.4  Ms 1.80  wc  39.3- 39.7 | phase +10.2%, Ms +12.4%, chatter +62.0%
+wn35 z1 i0.7 obs4            PM  38.5  Ms 1.88  wc  44.0- 44.5 | peak -18.2%, phase +14.3%, Ms +17.4%, chatter +100.0%, crossover +11.1%
+wn37 z1 i0.7 obs4            PM  37.3  Ms 1.93  wc  47.2- 47.6 | peak -8.5%, phase +17.1%, Ms +20.8%, chatter +127.0%, crossover +19.1%
+wn24 z1.1 i0.7 obs4          PM  49.5  Ms 1.55  wc  32.7- 33.1 | chatter +39.0%
+wn28 z1.1 i0.7 obs4          PM  46.4  Ms 1.64  wc  40.3- 40.8 | phase -3.1%, Ms +2.7%, chatter +102.0%
+wn32 z1.1 i0.7 obs4          PM  43.3  Ms 1.75  wc  48.1- 48.6 | phase +3.8%, Ms +9.3%, chatter +178.0%, crossover +21.4%
+wn35 z1.1 i0.7 obs4          PM  41.1  Ms 1.83  wc  53.9- 54.4 | peak -8.1%, phase +8.7%, Ms +14.5%, chatter +243.0%, crossover +35.9%
+wn37 z1.1 i0.7 obs4          PM  39.7  Ms 1.89  wc  57.7- 58.2 | peak +2.7%, phase +11.9%, Ms +18.2%, chatter +290.0%, crossover +45.6%
+wn20 z1.2 i0.7 obs4          PM  54.5  Ms 1.46  wc  28.3- 28.8 | chatter +18.0%
+wn24 z1.2 i0.7 obs4          PM  51.0  Ms 1.55  wc  36.8- 37.4 | chatter +85.0%
+wn28 z1.2 i0.7 obs4          PM  47.4  Ms 1.65  wc  45.4- 46.0 | Ms +3.2%, chatter +168.0%, crossover +14.9%
+wn32 z1.2 i0.7 obs4          PM  44.0  Ms 1.76  wc  54.1- 54.6 | peak -14.0%, phase +2.3%, Ms +10.3%, chatter +267.0%, crossover +36.5%
+wn35 z1.2 i0.7 obs4          PM  41.4  Ms 1.86  wc  60.1- 60.6 | peak +2.8%, phase +8.0%, Ms +16.3%, chatter +342.0%, crossover +51.6%
+wn37 z1.2 i0.7 obs4          PM  39.7  Ms 1.93  wc  63.8- 64.3 | peak +14.9%, phase +11.7%, Ms +20.6%, chatter +387.0%, crossover +60.8%
+wn20 z0.8 i1 obs4            PM  41.5  Ms 1.65  wc  21.2- 21.4 | phase +7.8%, Ms +2.8%
+wn24 z0.8 i1 obs4            PM  39.8  Ms 1.72  wc  26.9- 27.2 | phase +11.6%, Ms +7.4%
+wn28 z0.8 i1 obs4            PM  37.8  Ms 1.81  wc  32.8- 33.1 | phase +16.1%, Ms +13.0%, chatter +9.0%
+wn32 z0.8 i1 obs4            PM  35.6  Ms 1.91  wc  38.8- 39.2 | phase +20.9%, Ms +19.4%, chatter +50.0%
+wn35 z0.8 i1 obs4            PM  34.0  Ms 2.00  wc  43.4- 43.7 | phase +24.5%, Ms +24.8%, chatter +85.0%, crossover +9.3%
+wn37 z0.8 i1 obs4            PM  32.9  Ms 2.06  wc  46.4- 46.8 | peak -13.1%, phase +26.9%, Ms +28.7%, chatter +111.0%, crossover +17.0%
+wn20 z0.9 i1 obs4            PM  43.5  Ms 1.62  wc  22.3- 22.6 | phase +3.4%, Ms +1.3%
+wn24 z0.9 i1 obs4            PM  41.4  Ms 1.70  wc  28.4- 28.8 | phase +8.1%, Ms +6.5%
+wn28 z0.9 i1 obs4            PM  39.0  Ms 1.80  wc  34.7- 35.1 | phase +13.3%, Ms +12.6%, chatter +23.0%
+wn32 z0.9 i1 obs4            PM  36.6  Ms 1.91  wc  41.2- 41.5 | phase +18.7%, Ms +19.6%, chatter +69.0%
+wn35 z0.9 i1 obs4            PM  34.8  Ms 2.00  wc  46.0- 46.4 | peak -10.7%, phase +22.7%, Ms +25.2%, chatter +109.0%, crossover +16.0%
+wn37 z0.9 i1 obs4            PM  33.6  Ms 2.07  wc  49.3- 49.6 | peak -0.2%, phase +25.3%, Ms +29.3%, chatter +137.0%, crossover +24.1%
+wn20 z1 i1 obs4              PM  44.9  Ms 1.61  wc  23.6- 23.9 | phase +0.2%, Ms +0.9%
+wn24 z1 i1 obs4              PM  42.4  Ms 1.71  wc  30.1- 30.4 | phase +5.7%, Ms +6.6%
+wn28 z1 i1 obs4              PM  39.8  Ms 1.81  wc  36.8- 37.2 | phase +11.6%, Ms +13.3%, chatter +37.0%
+wn32 z1 i1 obs4              PM  37.1  Ms 1.93  wc  43.6- 44.0 | peak -14.5%, phase +17.5%, Ms +20.6%, chatter +88.0%, crossover +9.9%
+wn35 z1 i1 obs4              PM  35.2  Ms 2.03  wc  48.7- 49.1 | peak +2.3%, phase +21.8%, Ms +26.6%, chatter +132.0%, crossover +22.7%
+wn37 z1 i1 obs4              PM  33.9  Ms 2.10  wc  52.1- 52.5 | peak +14.3%, phase +24.6%, Ms +30.9%, chatter +163.0%, crossover +31.3%
+wn20 z1.1 i1 obs4            PM  49.1  Ms 1.54  wc  28.9- 29.3 | chatter +4.0%
+wn24 z1.1 i1 obs4            PM  45.8  Ms 1.65  wc  37.1- 37.5 | phase -1.8%, Ms +2.9%, chatter +64.0%
+wn28 z1.1 i1 obs4            PM  42.5  Ms 1.76  wc  45.4- 45.9 | phase +5.6%, Ms +10.2%, chatter +136.0%, crossover +14.7%
+wn32 z1.1 i1 obs4            PM  39.3  Ms 1.89  wc  53.8- 54.2 | peak -2.5%, phase +12.8%, Ms +18.2%, chatter +223.0%, crossover +35.6%
+wn35 z1.1 i1 obs4            PM  36.9  Ms 2.00  wc  60.0- 60.5 | peak +16.6%, phase +17.9%, Ms +24.9%, chatter +297.0%, crossover +51.3%
+wn37 z1.1 i1 obs4            PM  35.5  Ms 2.08  wc  64.2- 64.7 | peak +30.3%, phase +21.2%, Ms +29.7%, chatter +350.0%, crossover +61.8%
+wn20 z1.2 i1 obs4            PM  50.6  Ms 1.54  wc  32.7- 33.2 | chatter +39.0%
+wn24 z1.2 i1 obs4            PM  46.7  Ms 1.66  wc  42.0- 42.5 | phase -3.7%, Ms +3.5%, chatter +117.0%, crossover +6.3%
+wn28 z1.2 i1 obs4            PM  42.9  Ms 1.78  wc  51.4- 51.9 | peak -15.3%, phase +4.6%, Ms +11.4%, chatter +213.0%, crossover +29.6%
+wn32 z1.2 i1 obs4            PM  39.4  Ms 1.93  wc  60.7- 61.2 | peak +10.6%, phase +12.5%, Ms +20.3%, chatter +325.0%, crossover +53.0%
+wn35 z1.2 i1 obs4            PM  36.8  Ms 2.05  wc  67.2- 67.7 | peak +32.3%, phase +18.2%, Ms +27.9%, chatter +411.0%, crossover +69.3%
+wn37 z1.2 i1 obs4            PM  35.1  Ms 2.14  wc  71.2- 71.7 | peak +47.9%, phase +22.0%, Ms +33.5%, chatter +462.0%, crossover +79.2%
+wn20 z0.8 i0.3 obs5          PM  51.8  Ms 1.42  wc  16.5- 16.7 | slowest +52.0%
+wn24 z0.8 i0.3 obs5          PM  50.6  Ms 1.45  wc  21.3- 21.7 | slowest +42.4%
+wn28 z0.8 i0.3 obs5          PM  48.8  Ms 1.50  wc  26.5- 26.9 | slowest +32.8%
+wn32 z0.8 i0.3 obs5          PM  46.8  Ms 1.56  wc  31.8- 32.3 | phase -3.9%, chatter +24.0%, slowest +23.2%
+wn35 z0.8 i0.3 obs5          PM  45.2  Ms 1.61  wc  35.9- 36.3 | phase -0.3%, Ms +0.8%, chatter +55.0%, slowest +16.0%
+wn37 z0.8 i0.3 obs5          PM  44.1  Ms 1.65  wc  38.6- 39.1 | phase +2.0%, Ms +3.0%, chatter +78.0%, slowest +11.2%
+wn20 z0.9 i0.3 obs5          PM  54.5  Ms 1.38  wc  16.8- 17.1 | slowest +46.0%
+wn24 z0.9 i0.3 obs5          PM  53.3  Ms 1.43  wc  22.0- 22.4 | slowest +35.2%
+wn28 z0.9 i0.3 obs5          PM  51.2  Ms 1.49  wc  27.5- 27.9 | slowest +24.4%
+wn32 z0.9 i0.3 obs5          PM  48.9  Ms 1.55  wc  33.1- 33.6 | chatter +40.0%, slowest +13.6%
+wn35 z0.9 i0.3 obs5          PM  47.2  Ms 1.60  wc  37.4- 37.9 | phase -4.8%, Ms +0.1%, chatter +74.0%, slowest +5.5%
+wn37 z0.9 i0.3 obs5          PM  46.0  Ms 1.64  wc  40.3- 40.8 | phase -2.2%, Ms +2.4%, chatter +100.0%, slowest +0.1%
+wn20 z1 i0.3 obs5            PM  56.9  Ms 1.36  wc  17.3- 17.6 | slowest +40.0%
+wn24 z1 i0.3 obs5            PM  55.4  Ms 1.42  wc  22.8- 23.2 | slowest +28.0%
+wn28 z1 i0.3 obs5            PM  53.1  Ms 1.48  wc  28.6- 29.0 | chatter +11.0%, slowest +16.0%
+wn32 z1 i0.3 obs5            PM  50.5  Ms 1.55  wc  34.5- 35.0 | chatter +55.0%, slowest +4.0%
+wn35 z1 i0.3 obs5            PM  48.6  Ms 1.60  wc  39.1- 39.6 | Ms +0.2%, chatter +93.0%
+wn37 z1 i0.3 obs5            PM  47.3  Ms 1.64  wc  42.1- 42.6 | Ms +2.6%, chatter +121.0%, crossover +6.5%
+wn20 z1.1 i0.3 obs5          PM  63.0  Ms 1.30  wc  20.0- 20.5 | slowest +34.0%
+wn24 z1.1 i0.3 obs5          PM  60.7  Ms 1.37  wc  26.9- 27.5 | chatter +32.0%, slowest +20.8%
+wn28 z1.1 i0.3 obs5          PM  57.7  Ms 1.44  wc  34.1- 34.7 | chatter +96.0%, slowest +7.6%
+wn32 z1.1 i0.3 obs5          PM  54.5  Ms 1.51  wc  41.4- 42.0 | chatter +172.0%
+wn35 z1.1 i0.3 obs5          PM  51.9  Ms 1.57  wc  46.3- 46.9 | chatter +222.0%, crossover +17.2%
+wn37 z1.1 i0.3 obs5          PM  50.3  Ms 1.61  wc  49.5- 50.1 | Ms +0.8%, chatter +256.0%, crossover +25.2%
+wn20 z1.2 i0.3 obs5          PM  66.2  Ms 1.30  wc  22.2- 22.8 | chatter +11.0%, slowest +28.0%
+wn24 z1.2 i0.3 obs5          PM  63.1  Ms 1.37  wc  30.1- 30.7 | chatter +78.0%, slowest +13.6%
+wn28 z1.2 i0.3 obs5          PM  59.4  Ms 1.44  wc  37.9- 38.6 | chatter +156.0%
+wn32 z1.2 i0.3 obs5          PM  55.4  Ms 1.53  wc  45.1- 45.7 | chatter +228.0%, crossover +14.3%
+wn35 z1.2 i0.3 obs5          PM  52.4  Ms 1.59  wc  49.7- 50.3 | chatter +271.0%, crossover +25.7%
+wn37 z1.2 i0.3 obs5          PM  50.5  Ms 1.64  wc  52.6- 53.2 | Ms +2.6%, chatter +298.0%, crossover +33.0%
+wn20 z0.8 i0.5 obs5          PM  47.7  Ms 1.48  wc  18.3- 18.6 | slowest +20.0%
+wn24 z0.8 i0.5 obs5          PM  46.5  Ms 1.52  wc  23.6- 23.9 | phase -3.2%, slowest +4.0%
+wn28 z0.8 i0.5 obs5          PM  44.7  Ms 1.58  wc  29.1- 29.5 | phase +0.8%, chatter +1.0%
+wn32 z0.8 i0.5 obs5          PM  42.6  Ms 1.65  wc  34.8- 35.2 | phase +5.3%, Ms +3.4%, chatter +42.0%
+wn35 z0.8 i0.5 obs5          PM  41.0  Ms 1.71  wc  39.1- 39.5 | phase +8.8%, Ms +7.1%, chatter +77.0%
+wn37 z0.8 i0.5 obs5          PM  40.0  Ms 1.75  wc  42.0- 42.4 | phase +11.1%, Ms +9.7%, chatter +102.0%, crossover +6.0%
+wn20 z0.9 i0.5 obs5          PM  50.2  Ms 1.44  wc  19.1- 19.4 | slowest +10.0%
+wn28 z0.9 i0.5 obs5          PM  46.5  Ms 1.57  wc  30.6- 31.0 | phase -3.4%, chatter +15.0%
+wn32 z0.9 i0.5 obs5          PM  44.2  Ms 1.65  wc  36.6- 37.1 | phase +1.7%, Ms +3.0%, chatter +60.0%
+wn35 z0.9 i0.5 obs5          PM  42.5  Ms 1.71  wc  41.2- 41.7 | phase +5.6%, Ms +6.9%, chatter +99.0%
+wn37 z0.9 i0.5 obs5          PM  41.3  Ms 1.75  wc  44.3- 44.7 | phase +8.2%, Ms +9.7%, chatter +127.0%, crossover +11.8%
+wn28 z1 i0.5 obs5            PM  47.9  Ms 1.57  wc  32.2- 32.7 | chatter +29.0%
+wn32 z1 i0.5 obs5            PM  45.3  Ms 1.66  wc  38.6- 39.1 | phase -0.6%, Ms +3.6%, chatter +79.0%
+wn35 z1 i0.5 obs5            PM  43.4  Ms 1.72  wc  43.5- 43.9 | phase +3.7%, Ms +7.7%, chatter +122.0%, crossover +9.8%
+wn37 z1 i0.5 obs5            PM  42.1  Ms 1.77  wc  46.7- 47.2 | phase +6.5%, Ms +10.6%, chatter +153.0%, crossover +17.9%
+wn24 z1.1 i0.5 obs5          PM  55.0  Ms 1.44  wc  31.1- 31.6 | chatter +54.0%
+wn28 z1.1 i0.5 obs5          PM  51.9  Ms 1.52  wc  38.8- 39.4 | chatter +125.0%
+wn32 z1.1 i0.5 obs5          PM  48.8  Ms 1.61  wc  46.6- 47.2 | Ms +0.6%, chatter +211.0%, crossover +17.9%
+wn35 z1.1 i0.5 obs5          PM  46.2  Ms 1.69  wc  51.8- 52.4 | phase -2.7%, Ms +5.4%, chatter +267.0%, crossover +30.9%
+wn37 z1.1 i0.5 obs5          PM  44.6  Ms 1.74  wc  55.2- 55.8 | peak -15.8%, phase +1.0%, Ms +8.7%, chatter +305.0%, crossover +39.4%
+wn20 z1.2 i0.5 obs5          PM  60.3  Ms 1.36  wc  26.4- 27.0 | chatter +30.0%
+wn24 z1.2 i0.5 obs5          PM  56.8  Ms 1.45  wc  34.9- 35.5 | chatter +106.0%
+wn28 z1.2 i0.5 obs5          PM  53.0  Ms 1.53  wc  43.3- 44.0 | chatter +194.0%, crossover +9.9%
+wn32 z1.2 i0.5 obs5          PM  49.1  Ms 1.64  wc  50.9- 51.5 | Ms +2.2%, chatter +275.0%, crossover +28.8%
+wn35 z1.2 i0.5 obs5          PM  46.2  Ms 1.72  wc  55.8- 56.4 | peak -16.8%, phase -2.6%, Ms +7.6%, chatter +322.0%, crossover +41.0%
+wn37 z1.2 i0.5 obs5          PM  44.3  Ms 1.78  wc  58.9- 59.5 | peak -7.0%, phase +1.5%, Ms +11.4%, chatter +353.0%, crossover +48.7%
+wn20 z0.8 i0.7 obs5          PM  45.3  Ms 1.52  wc  20.0- 20.3 | phase -0.7%
+wn24 z0.8 i0.7 obs5          PM  43.9  Ms 1.58  wc  25.6- 25.9 | phase +2.5%
+wn28 z0.8 i0.7 obs5          PM  42.0  Ms 1.65  wc  31.5- 31.8 | phase +6.7%, Ms +3.2%, chatter +14.0%
+wn32 z0.8 i0.7 obs5          PM  39.9  Ms 1.73  wc  37.5- 37.9 | phase +11.4%, Ms +8.4%, chatter +59.0%
+wn35 z0.8 i0.7 obs5          PM  38.3  Ms 1.80  wc  42.0- 42.4 | phase +15.0%, Ms +12.6%, chatter +98.0%, crossover +6.1%
+wn37 z0.8 i0.7 obs5          PM  37.2  Ms 1.85  wc  45.1- 45.5 | phase +17.3%, Ms +15.7%, chatter +126.0%, crossover +13.7%
+wn24 z0.9 i0.7 obs5          PM  45.8  Ms 1.57  wc  27.1- 27.5 | phase -1.7%
+wn28 z0.9 i0.7 obs5          PM  43.5  Ms 1.65  wc  33.4- 33.8 | phase +3.3%, Ms +2.9%, chatter +30.0%
+wn32 z0.9 i0.7 obs5          PM  41.1  Ms 1.74  wc  39.8- 40.2 | phase +8.6%, Ms +8.6%, chatter +80.0%
+wn35 z0.9 i0.7 obs5          PM  39.3  Ms 1.81  wc  44.7- 45.1 | phase +12.6%, Ms +13.2%, chatter +123.0%, crossover +12.7%
+wn37 z0.9 i0.7 obs5          PM  38.1  Ms 1.86  wc  47.9- 48.3 | peak -18.7%, phase +15.3%, Ms +16.4%, chatter +155.0%, crossover +20.8%
+wn24 z1 i0.7 obs5            PM  47.0  Ms 1.57  wc  28.8- 29.2 | phase -4.5%
+wn28 z1 i0.7 obs5            PM  44.4  Ms 1.66  wc  35.5- 35.9 | phase +1.2%, Ms +3.7%, chatter +46.0%
+wn32 z1 i0.7 obs5            PM  41.8  Ms 1.76  wc  42.2- 42.7 | phase +7.2%, Ms +9.7%, chatter +101.0%, crossover +6.7%
+wn35 z1 i0.7 obs5            PM  39.8  Ms 1.83  wc  47.4- 47.8 | peak -18.2%, phase +11.5%, Ms +14.7%, chatter +149.0%, crossover +19.6%
+wn37 z1 i0.7 obs5            PM  38.5  Ms 1.89  wc  50.8- 51.3 | peak -8.5%, phase +14.4%, Ms +18.2%, chatter +183.0%, crossover +28.1%
+wn20 z1.1 i0.7 obs5          PM  54.3  Ms 1.43  wc  26.7- 27.2 | chatter +10.0%
+wn24 z1.1 i0.7 obs5          PM  51.2  Ms 1.51  wc  34.8- 35.3 | chatter +75.0%
+wn28 z1.1 i0.7 obs5          PM  47.9  Ms 1.61  wc  43.0- 43.6 | Ms +0.4%, chatter +154.0%, crossover +8.9%
+wn32 z1.1 i0.7 obs5          PM  44.7  Ms 1.71  wc  51.3- 51.9 | phase +0.6%, Ms +6.9%, chatter +249.0%, crossover +29.6%
+wn35 z1.1 i0.7 obs5          PM  42.1  Ms 1.80  wc  56.8- 57.3 | peak -8.1%, phase +6.3%, Ms +12.6%, chatter +311.0%, crossover +43.4%
+wn37 z1.1 i0.7 obs5          PM  40.5  Ms 1.87  wc  60.4- 60.9 | peak +2.7%, phase +10.0%, Ms +16.6%, chatter +353.0%, crossover +52.3%
+wn20 z1.2 i0.7 obs5          PM  56.3  Ms 1.43  wc  30.1- 30.7 | chatter +48.0%
+wn24 z1.2 i0.7 obs5          PM  52.6  Ms 1.52  wc  39.3- 39.8 | chatter +133.0%
+wn28 z1.2 i0.7 obs5          PM  48.7  Ms 1.62  wc  48.2- 48.8 | Ms +1.5%, chatter +230.0%, crossover +21.9%
+wn32 z1.2 i0.7 obs5          PM  44.7  Ms 1.75  wc  56.2- 56.8 | peak -14.0%, phase +0.6%, Ms +9.1%, chatter +320.0%, crossover +42.0%
+wn35 z1.2 i0.7 obs5          PM  41.8  Ms 1.85  wc  61.3- 61.9 | peak +2.8%, phase +7.2%, Ms +15.6%, chatter +373.0%, crossover +54.7%
+wn37 z1.2 i0.7 obs5          PM  39.9  Ms 1.92  wc  64.6- 65.1 | peak +14.9%, phase +11.3%, Ms +20.2%, chatter +407.0%, crossover +62.8%
+wn20 z0.8 i1 obs5            PM  43.3  Ms 1.58  wc  22.2- 22.5 | phase +3.8%
+wn24 z0.8 i1 obs5            PM  41.6  Ms 1.65  wc  28.3- 28.7 | phase +7.6%, Ms +2.9%
+wn28 z0.8 i1 obs5            PM  39.5  Ms 1.74  wc  34.7- 35.0 | phase +12.3%, Ms +8.4%, chatter +33.0%
+wn32 z0.8 i1 obs5            PM  37.2  Ms 1.84  wc  41.1- 41.5 | phase +17.3%, Ms +14.7%, chatter +84.0%
+wn35 z0.8 i1 obs5            PM  35.5  Ms 1.92  wc  46.0- 46.4 | phase +21.1%, Ms +19.9%, chatter +128.0%, crossover +16.0%
+wn37 z0.8 i1 obs5            PM  34.4  Ms 1.98  wc  49.3- 49.7 | peak -13.1%, phase +23.6%, Ms +23.6%, chatter +160.0%, crossover +24.1%
+wn20 z0.9 i1 obs5            PM  45.3  Ms 1.56  wc  23.7- 24.0 | phase -0.6%
+wn24 z0.9 i1 obs5            PM  43.1  Ms 1.65  wc  30.3- 30.7 | phase +4.3%, Ms +2.9%, chatter +4.0%
+wn28 z0.9 i1 obs5            PM  40.6  Ms 1.75  wc  37.1- 37.5 | phase +9.8%, Ms +9.1%, chatter +52.0%
+wn32 z0.9 i1 obs5            PM  38.0  Ms 1.85  wc  44.0- 44.4 | phase +15.5%, Ms +15.9%, chatter +109.0%, crossover +11.1%
+wn35 z0.9 i1 obs5            PM  36.1  Ms 1.95  wc  49.2- 49.7 | peak -10.7%, phase +19.7%, Ms +21.6%, chatter +158.0%, crossover +24.2%
+wn37 z0.9 i1 obs5            PM  34.9  Ms 2.01  wc  52.7- 53.2 | peak -0.2%, phase +22.5%, Ms +25.6%, chatter +194.0%, crossover +32.9%
+wn20 z1 i1 obs5              PM  46.6  Ms 1.57  wc  25.3- 25.6 | phase -3.6%
+wn24 z1 i1 obs5              PM  44.0  Ms 1.66  wc  32.4- 32.8 | phase +2.3%, Ms +3.9%, chatter +18.0%
+wn28 z1 i1 obs5              PM  41.1  Ms 1.77  wc  39.6- 40.1 | phase +8.7%, Ms +10.5%, chatter +71.0%
+wn32 z1 i1 obs5              PM  38.3  Ms 1.89  wc  47.0- 47.4 | peak -14.5%, phase +14.9%, Ms +17.9%, chatter +134.0%, crossover +18.5%
+wn35 z1 i1 obs5              PM  36.2  Ms 1.98  wc  52.5- 52.9 | peak +2.3%, phase +19.5%, Ms +24.0%, chatter +188.0%, crossover +32.4%
+wn37 z1 i1 obs5              PM  34.9  Ms 2.05  wc  56.2- 56.6 | peak +14.3%, phase +22.5%, Ms +28.4%, chatter +228.0%, crossover +41.6%
+wn20 z1.1 i1 obs5            PM  50.9  Ms 1.50  wc  30.8- 31.3 | chatter +31.0%
+wn24 z1.1 i1 obs5            PM  47.4  Ms 1.61  wc  39.6- 40.1 | Ms +0.5%, chatter +105.0%
+wn28 z1.1 i1 obs5            PM  43.9  Ms 1.72  wc  48.6- 49.1 | phase +2.5%, Ms +7.7%, chatter +196.0%, crossover +22.8%
+wn32 z1.1 i1 obs5            PM  40.5  Ms 1.85  wc  57.6- 58.1 | peak -2.5%, phase +10.0%, Ms +15.7%, chatter +304.0%, crossover +45.2%
+wn35 z1.1 i1 obs5            PM  37.9  Ms 1.97  wc  63.5- 64.0 | peak +16.6%, phase +15.9%, Ms +22.9%, chatter +374.0%, crossover +59.9%
+wn37 z1.1 i1 obs5            PM  36.2  Ms 2.05  wc  67.3- 67.8 | peak +30.3%, phase +19.6%, Ms +28.1%, chatter +423.0%, crossover +69.5%
+wn20 z1.2 i1 obs5            PM  52.2  Ms 1.51  wc  35.0- 35.5 | chatter +75.0%
+wn24 z1.2 i1 obs5            PM  48.1  Ms 1.62  wc  44.9- 45.5 | Ms +1.4%, chatter +173.0%, crossover +13.7%
+wn28 z1.2 i1 obs5            PM  44.1  Ms 1.75  wc  54.6- 55.1 | peak -15.3%, phase +2.1%, Ms +9.5%, chatter +284.0%, crossover +37.8%
+wn32 z1.2 i1 obs5            PM  40.1  Ms 1.90  wc  63.2- 63.7 | peak +10.6%, phase +11.0%, Ms +19.0%, chatter +386.0%, crossover +59.3%
+wn35 z1.2 i1 obs5            PM  37.1  Ms 2.04  wc  68.6- 69.2 | peak +32.3%, phase +17.6%, Ms +27.2%, chatter +446.0%, crossover +72.9%
+wn37 z1.2 i1 obs5            PM  35.2  Ms 2.13  wc  72.1- 72.6 | peak +47.9%, phase +21.7%, Ms +33.1%, chatter +486.0%, crossover +81.5%
+
+Best: wn24 z1.1 i0.5 obs3  (score 1.01; uses 95 % of the Ms limit and 91 % of the chatter limit)
+Score: 1.00 = best of the accepted designs on joint error, tip RMS, contour RMS and max.
+
+Check of the best design (worst motor):
+  PM =  50.9 deg     target >= 45        ok
+  Ms =  1.52         target <= 1.6       ok
+  wc = 26.7-27.1 rad/s  window [20, 40]  ok
+
+
+#################### FINAL REPORT ####################
+
+a) BEST FOR EACH OBSERVER OPTION (score among the accepted designs)
+   observer best design                  score |    PM    Ms  wc [rad/s] | accepted
+   3x       wn24 z1.1 i0.5 obs3           1.01 |  50.9  1.52  26.7/ 27.1 | 6 of 120
+   4x       wn20 z1.1 i0.7 obs4           1.02 |  52.4  1.46  25.2/ 25.6 | 5 of 120
+   5x       wn20 z1.1 i0.5 obs5           1.01 |  57.7  1.37  23.6/ 24.0 | 6 of 120
+
+b) BEST FOR EACH REQUIREMENT (worst motor) AND EACH METRIC
+   peak voltage [V]         lowest       1.069   wn20 z1 i0.5 obs5
+   phase margin [deg]       highest     57.724   wn20 z1.1 i0.5 obs5
+   Ms [-]                   lowest       1.367   wn20 z1.1 i0.5 obs5
+   chatter [V]              lowest       0.032   wn20 z1 i0.5 obs3
+   slowest pole [rad/s]     highest     14.000   wn20 z1 i0.7 obs5
+   crossover wc [rad/s]     highest     27.119   wn24 z1.1 i0.5 obs3
+   joint error RMS [deg]    lowest       0.210   wn24 z1.1 i0.5 obs3
+   tip tracking RMS [mm]    lowest       0.646   wn24 z1.1 i0.5 obs3
+   tip tracking max [mm]    lowest       4.309   wn24 z1.1 i0.5 obs3
+   contour RMS [mm]         lowest       0.416   wn24 z1.1 i0.5 obs3
+   contour max [mm]         lowest       3.129   wn20 z1.1 i0.5 obs5
+   HF voltage [V]           lowest       0.053   wn20 z0.9 i0.7 obs5
+
+c) OVERALL BEST WITH COHERENT MARGINS  (PM >= 45 deg, Ms <= 1.6, wc in [20, 40] rad/s, motor mismatch <= 15 %)
+   rank design                       score |    PM    Ms  wc [rad/s]  mism. |  tip RMS [mm]  contour [mm]
+   1    wn24 z1.1 i0.5 obs3           1.01 |  50.9  1.52  26.7/ 27.1   1.6% |         0.646  0.416/ 3.198
+   2    wn20 z1.1 i0.5 obs5           1.01 |  57.7  1.37  23.6/ 24.0   2.0% |         0.650  0.423/ 3.129
+   3    wn20 z1.2 i0.7 obs3           1.01 |  52.2  1.50  25.9/ 26.3   1.6% |         0.655  0.422/ 3.157
+
+   >>> OVERALL BEST: wn24 z1.1 i0.5 obs3  -> copy wn, zeta, lambda = ifac*zeta*wn and the observer
+       factor into pole_place.m (lambda in rad/s, see the ==== line of the report).
+
+Report saved in C:\Users\ricca\Desktop\aclab\matlab\scripts\control\pp_design\..\..\..\data\sim\analysis_pp_tune_20261124_202544.txt

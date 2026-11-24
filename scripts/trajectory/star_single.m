@@ -1,4 +1,4 @@
-function [x, y, vx, vy, ax, ay] = star_gen_smooth(t)
+function [x, y, vx, vy, ax, ay] = star_single(t)
 % STAR_GEN_SMOOTH  Five-pointed star for the tip C, for a MATLAB Function block.
 %   10 vertices alternating between the outer radius R (tips) and the inner radius
 %   ratio*R (notches); ratio = 0.382 gives the regular star (pentagram outline).
@@ -14,14 +14,24 @@ function [x, y, vx, vy, ax, ay] = star_gen_smooth(t)
 %% Settings (change here)
 speed  = 1;                 % [-] 1 = one lap in T0; 2 = twice as fast (acceleration x4)
 T0     = 6;                 % [s] lap time at speed = 1 (10 segments: slower than the square)
-D      = 0.070;             % [m] outer diameter (circle through the 5 tips)
+D      = 0.0850;             % [m] outer diameter (circle through the 5 tips)
 ratio  = 0.382;             % [-] inner/outer radius (0.382 = regular star)
 c      = [0.127; 0.127];    % [m] centre of the star (home of the tip)
 home   = [0.127; 0.127];    % [m] tip position at t = 0
 t_app  = 1.0;               % [s] time of the approach home -> top tip
 t_wait = 0.5;               % [s] stop at the top tip before the laps
-n_laps = Inf;               % number of laps, then stop at the top tip
+n_laps = 2;                 % number of laps, then stop at the top tip
+t_tail = 0.5;               % [s] still time after the last lap
 ccw    = true;              % true = counter-clockwise, false = clockwise
+
+%% Query (t < 0, never used by Simulink, only by check_trajectory.m / traj_select(-1, id)):
+%   x = Stop Time to set, y = start of the laps, vx = lap time, vy = speed, ax = end of the motion
+T  = T0/speed;                              % [s] lap time
+t0 = t_app + t_wait;                        % [s] start of the laps
+if t < 0
+    x = t0 + n_laps*T + t_tail;  y = t0;  vx = T;  vy = speed;  ax = t0 + n_laps*T;  ay = 0;
+    return
+end
 
 %% Vertices: top tip, then alternating notch / tip every 36 deg, back to the top tip
 R   = D/2;
