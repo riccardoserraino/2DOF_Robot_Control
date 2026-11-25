@@ -32,9 +32,9 @@ Thumbs.db
 desktop.ini
 
 # ---- pp design ----
-scripts/control/pp_design/tools/
-scripts/control/pp_design/docs/
-scripts/control/pp_design/utils/
+scripts/control/pole_placement/tools/
+scripts/control/pole_placement/docs/
+scripts/control/pole_placement/utils/
 
 
 
